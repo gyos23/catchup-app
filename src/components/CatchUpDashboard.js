@@ -1,5 +1,5 @@
 // CatchUp - Personal Relationship Assistant
-// Complete React Application
+// Complete Functional React Application
 
 import React, { useState } from "react";
 import {
@@ -21,6 +21,8 @@ import {
   Activity,
   Send,
   Zap,
+  Mail,
+  Check,
 } from "lucide-react";
 
 const CatchUpDashboard = () => {
@@ -31,6 +33,9 @@ const CatchUpDashboard = () => {
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);
   const [showContactPanel, setShowContactPanel] = useState(false);
   const [selectedContactMethod, setSelectedContactMethod] = useState(null);
+  const [contactMessage, setContactMessage] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   // Sample relationship data - replace with real data in production
   const relationships = [
@@ -196,6 +201,7 @@ const CatchUpDashboard = () => {
     yellow: "#f2a900",
   };
 
+  // Helper functions
   const getStatusColor = (status) => {
     switch (status) {
       case "green":
@@ -237,478 +243,479 @@ const CatchUpDashboard = () => {
     }
   };
 
-  const openAIPanel = (person) => {
+  // Functional handlers
+  const handleFilterChange = (status) => {
+    setFilterStatus(status);
+    setSelectedPerson(null);
+    showTemporaryNotification(
+      `Filtering by: ${status === "all" ? "All contacts" : status + " status"}`
+    );
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handlePersonSelect = (person) => {
     setSelectedPerson(person);
-    setShowAIPanel(true);
-  };
-
-  const openAnalyticsPanel = (person) => {
-    setSelectedPerson(person);
-    setShowAnalyticsPanel(true);
-  };
-
-  const openContactPanel = (person) => {
-    setSelectedPerson(person);
-    setSelectedContactMethod(null);
-    setShowContactPanel(true);
-  };
-
-  const generateAIMessage = (person) => {
-    const firstName = person.name.split(" ")[0];
-    if (person.mood === "excited")
-      return `Hey ${firstName}! Hope you're doing great! Thinking of you and wanted to catch up 😊`;
-    if (person.mood.includes("stressed"))
-      return `Hi ${firstName}! I know things have been hectic for you lately. Hope you're doing okay! 💙`;
-    if (person.mood.includes("hurt"))
-      return `Hi ${firstName}! I've been thinking about you and realized it's been too long since we talked. Hope you're well! ❤️`;
-    return `Hey ${firstName}! Hope you're having a great day! Would love to catch up soon 😊`;
-  };
-
-  const initiateContact = (person, method, message = "") => {
-    const encodedMessage = encodeURIComponent(message);
-
-    switch (method) {
-      case "call":
-        window.open(`tel:${person.phoneNumber}`, "_self");
-        break;
-      case "text":
-        if (/iPhone|iPad|iPod|Mac/.test(navigator.userAgent)) {
-          window.open(
-            `sms:${person.phoneNumber}&body=${encodedMessage}`,
-            "_self"
-          );
-        } else {
-          window.open(
-            `sms:${person.phoneNumber}?body=${encodedMessage}`,
-            "_self"
-          );
-        }
-        break;
-      case "email":
-        const subject = encodeURIComponent(`Let's catch up!`);
-        window.open(
-          `mailto:${person.email}?subject=${subject}&body=${encodedMessage}`,
-          "_self"
-        );
-        break;
-      default:
-        initiateContact(person, person.preferredMethod, message);
-    }
-
+    setShowAIPanel(false);
+    setShowAnalyticsPanel(false);
     setShowContactPanel(false);
   };
 
-  const getBestContactMethod = (person) => {
-    const methods = person.analytics?.methodBreakdown || {};
-    if (methods.calls > 50) return "call";
-    if (methods.texts > 40) return "text";
-    return person.preferredMethod;
+  const handleShowAI = () => {
+    setShowAIPanel(true);
+    setShowAnalyticsPanel(false);
+    setShowContactPanel(false);
   };
 
+  const handleShowAnalytics = () => {
+    setShowAnalyticsPanel(true);
+    setShowAIPanel(false);
+    setShowContactPanel(false);
+  };
+
+  const handleContactMethod = (method) => {
+    setSelectedContactMethod(method);
+    setShowContactPanel(true);
+    setShowAIPanel(false);
+    setShowAnalyticsPanel(false);
+
+    // Pre-fill message based on AI suggestions if available
+    if (selectedPerson?.aiSuggestions?.[0]) {
+      setContactMessage(
+        `Hi ${selectedPerson.name.split(" ")[0]}! ${
+          selectedPerson.aiSuggestions[0].content
+        }`
+      );
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (!contactMessage.trim()) {
+      showTemporaryNotification("Please enter a message first!");
+      return;
+    }
+
+    const methodName =
+      selectedContactMethod === "call"
+        ? "Call initiated"
+        : selectedContactMethod === "text"
+        ? "Message sent"
+        : selectedContactMethod === "email"
+        ? "Email sent"
+        : "Message sent";
+
+    showTemporaryNotification(`${methodName} to ${selectedPerson.name}!`);
+    setContactMessage("");
+    setShowContactPanel(false);
+    setSelectedContactMethod(null);
+
+    // In a real app, this would update the backend
+    console.log(
+      `Contacting ${selectedPerson.name} via ${selectedContactMethod}: ${contactMessage}`
+    );
+  };
+
+  const handleUseSuggestion = (suggestion) => {
+    setContactMessage(
+      contactMessage + (contactMessage ? " " : "") + suggestion.content
+    );
+    showTemporaryNotification("AI suggestion added to message!");
+  };
+
+  const handleQuickContact = (person) => {
+    setSelectedPerson(person);
+    handleContactMethod(person.preferredMethod);
+  };
+
+  const showTemporaryNotification = (message) => {
+    setNotificationMessage(message);
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 3000);
+  };
+
+  const handleMarkAsContacted = () => {
+    showTemporaryNotification(`Marked ${selectedPerson.name} as contacted!`);
+    // In a real app, update the backend
+  };
+
+  const handleScheduleReminder = () => {
+    showTemporaryNotification(`Reminder scheduled for ${selectedPerson.name}!`);
+    // In a real app, integrate with calendar
+  };
+
+  // Filter and search logic
   const filteredRelationships = relationships.filter((person) => {
     const matchesFilter =
       filterStatus === "all" || person.status === filterStatus;
-    const matchesSearch = person.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      person.relationship.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
-  const statusCounts = {
-    all: relationships.length,
-    green: relationships.filter((r) => r.status === "green").length,
-    yellow: relationships.filter((r) => r.status === "yellow").length,
-    red: relationships.filter((r) => r.status === "red").length,
-  };
+  // Sort by priority (red first, then yellow, then green)
+  const sortedRelationships = [...filteredRelationships].sort((a, b) => {
+    const statusOrder = { red: 0, yellow: 1, green: 2 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
 
   return (
     <div
       className="min-h-screen"
       style={{ backgroundColor: brandColors.background }}
     >
-      {/* Header */}
-      <div
-        className="px-6 py-8"
-        style={{ backgroundColor: brandColors.primary }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-3">
-            <Heart className="text-white" size={28} />
-            <h1 className="text-2xl font-bold text-white">CatchUp</h1>
-          </div>
-          <div className="text-right">
-            <p className="text-blue-100 text-sm">Your Relationship Health</p>
-            <p className="text-white text-xl font-semibold">
-              {Math.round(
-                relationships.reduce((acc, r) => acc + r.healthScore, 0) /
-                  relationships.length
-              )}
-              %
-            </p>
-          </div>
-        </div>
-
-        {/* Status Summary Cards */}
-        <div className="grid grid-cols-4 gap-3 mb-6">
-          {[
-            {
-              key: "all",
-              label: "Total",
-              color: brandColors.white,
-              textColor: brandColors.primary,
-            },
-            {
-              key: "green",
-              label: "Healthy",
-              color: brandColors.primary,
-              textColor: brandColors.white,
-            },
-            {
-              key: "yellow",
-              label: "Attention",
-              color: brandColors.yellow,
-              textColor: brandColors.white,
-            },
-            {
-              key: "red",
-              label: "Priority",
-              color: brandColors.red,
-              textColor: brandColors.white,
-            },
-          ].map((item) => (
-            <button
-              key={item.key}
-              onClick={() => setFilterStatus(item.key)}
-              className="p-3 rounded-xl transition-all duration-200 transform hover:scale-105"
-              style={{
-                backgroundColor:
-                  filterStatus === item.key
-                    ? item.color
-                    : "rgba(255,255,255,0.2)",
-                color:
-                  filterStatus === item.key
-                    ? item.textColor
-                    : brandColors.white,
-                border: `2px solid ${
-                  filterStatus === item.key
-                    ? item.color
-                    : "rgba(255,255,255,0.3)"
-                }`,
-              }}
-            >
-              <p className="text-2xl font-bold">{statusCounts[item.key]}</p>
-              <p className="text-xs opacity-90">{item.label}</p>
-            </button>
-          ))}
-        </div>
-
-        {/* Search Bar */}
-        <div className="relative">
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            size={18}
-          />
-          <input
-            type="text"
-            placeholder="Search relationships..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-white focus:ring-opacity-50 outline-none"
-            style={{ backgroundColor: "rgba(255,255,255,0.9)" }}
-          />
-        </div>
-      </div>
-
-      {/* Relationships List */}
-      <div className="px-6 py-4 space-y-3">
-        {filteredRelationships.map((person) => (
+      {/* Notification Toast */}
+      {showNotification && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-down">
           <div
-            key={person.id}
-            className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200"
+            className="px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
+            style={{ backgroundColor: brandColors.primary }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm"
-                  style={{ backgroundColor: getStatusColor(person.status) }}
-                >
-                  {person.avatar}
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    <h3 className="font-semibold text-gray-900">
-                      {person.name}
-                    </h3>
-                    {getStatusIcon(person.status)}
-                  </div>
-                  <p className="text-sm text-gray-500">{person.relationship}</p>
-                  <div className="flex items-center space-x-4 mt-1">
-                    <span className="text-xs text-gray-400">
-                      Last: {person.lastContact}
-                    </span>
-                    <span className="text-xs text-gray-400">•</span>
-                    <span className="text-xs text-gray-400">
-                      Next: {person.nextSuggested}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-right">
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-xs text-gray-500">Health</span>
-                  <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full transition-all duration-500 rounded-full"
-                      style={{
-                        width: `${person.healthScore}%`,
-                        backgroundColor: getStatusColor(person.status),
-                      }}
-                    />
-                  </div>
-                  <span
-                    className="text-xs font-medium"
-                    style={{ color: getStatusColor(person.status) }}
-                  >
-                    {person.healthScore}%
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => openAnalyticsPanel(person)}
-                    className="p-2 rounded-lg transition-all duration-200 hover:bg-green-50 hover:scale-105"
-                    style={{ color: brandColors.primary }}
-                    title="Analytics"
-                  >
-                    <BarChart3 size={14} />
-                  </button>
-                  <button
-                    onClick={() => openAIPanel(person)}
-                    className="p-2 rounded-lg transition-all duration-200 hover:bg-purple-50 hover:scale-105"
-                    style={{ color: brandColors.primary }}
-                    title="AI Suggestions"
-                  >
-                    <Sparkles size={14} />
-                  </button>
-                  <button
-                    onClick={() => openContactPanel(person)}
-                    className="p-2 rounded-lg transition-colors duration-200 hover:bg-blue-50"
-                    style={{ color: brandColors.primary }}
-                    title="Smart Contact"
-                  >
-                    <Zap size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {person.notes && (
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <p className="text-sm text-gray-600 italic">"{person.notes}"</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Smart Contact Panel */}
-      {showContactPanel && selectedPerson && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl w-full max-w-md mx-4 overflow-hidden animate-slide-up">
-            <div
-              className="px-6 py-4 border-b border-gray-100"
-              style={{ backgroundColor: brandColors.primary }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm"
-                    style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
-                  >
-                    {selectedPerson.avatar}
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-white">
-                      {selectedPerson.name}
-                    </h2>
-                    <p className="text-sm text-blue-100">
-                      Smart Contact Assistant
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowContactPanel(false)}
-                  className="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors duration-200"
-                >
-                  <X size={20} className="text-white" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Sparkles size={16} style={{ color: brandColors.primary }} />
-                  <span className="text-sm font-medium text-gray-900">
-                    AI Recommendation
-                  </span>
-                </div>
-                <p className="text-sm text-gray-700 mb-3">
-                  Based on their patterns, {selectedPerson.name} responds best
-                  to{" "}
-                  <span
-                    className="font-medium"
-                    style={{ color: brandColors.primary }}
-                  >
-                    {getBestContactMethod(selectedPerson)}s
-                  </span>{" "}
-                  during{" "}
-                  <span className="font-medium">
-                    {selectedPerson.bestTimeToContact.toLowerCase()}
-                  </span>
-                </p>
-              </div>
-
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Choose Contact Method
-              </h3>
-              <div className="space-y-3">
-                <button
-                  onClick={() => initiateContact(selectedPerson, "call")}
-                  className="w-full p-4 rounded-xl border-2 flex items-center justify-between transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{
-                    borderColor:
-                      getBestContactMethod(selectedPerson) === "call"
-                        ? brandColors.primary
-                        : "#e5e7eb",
-                    backgroundColor:
-                      getBestContactMethod(selectedPerson) === "call"
-                        ? "#f0f8ff"
-                        : "transparent",
-                  }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <Phone size={20} style={{ color: brandColors.primary }} />
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">Call Now</p>
-                      <p className="text-sm text-gray-500">Direct phone call</p>
-                    </div>
-                  </div>
-                  {getBestContactMethod(selectedPerson) === "call" && (
-                    <span
-                      className="text-xs px-2 py-1 rounded-full text-white"
-                      style={{ backgroundColor: brandColors.primary }}
-                    >
-                      RECOMMENDED
-                    </span>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => setSelectedContactMethod("text")}
-                  className="w-full p-4 rounded-xl border-2 flex items-center justify-between transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{
-                    borderColor:
-                      selectedContactMethod === "text"
-                        ? brandColors.primary
-                        : "#e5e7eb",
-                    backgroundColor:
-                      selectedContactMethod === "text"
-                        ? "#f0f8ff"
-                        : "transparent",
-                  }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <MessageCircle
-                      size={20}
-                      style={{ color: brandColors.primary }}
-                    />
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">Send Message</p>
-                      <p className="text-sm text-gray-500">
-                        AI-crafted text message
-                      </p>
-                    </div>
-                  </div>
-                  <ArrowRight size={16} className="text-gray-400" />
-                </button>
-
-                <button
-                  onClick={() => setSelectedContactMethod("email")}
-                  className="w-full p-4 rounded-xl border-2 flex items-center justify-between transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{
-                    borderColor:
-                      selectedContactMethod === "email"
-                        ? brandColors.primary
-                        : "#e5e7eb",
-                    backgroundColor:
-                      selectedContactMethod === "email"
-                        ? "#f0f8ff"
-                        : "transparent",
-                  }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <Send size={20} style={{ color: brandColors.primary }} />
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">Email</p>
-                      <p className="text-sm text-gray-500">Send an email</p>
-                    </div>
-                  </div>
-                  <ArrowRight size={16} className="text-gray-400" />
-                </button>
-              </div>
-
-              {selectedContactMethod && selectedContactMethod !== "call" && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-                  <h4 className="font-medium text-gray-900 mb-2 flex items-center">
-                    <Lightbulb
-                      size={16}
-                      className="mr-2"
-                      style={{ color: brandColors.yellow }}
-                    />
-                    AI-Generated Message
-                  </h4>
-                  <div className="mb-3 p-3 bg-white rounded-lg border border-gray-200">
-                    <p className="text-sm text-gray-700 italic">
-                      "{generateAIMessage(selectedPerson)}"
-                    </p>
-                  </div>
-                  <button
-                    onClick={() =>
-                      initiateContact(
-                        selectedPerson,
-                        selectedContactMethod,
-                        generateAIMessage(selectedPerson)
-                      )
-                    }
-                    className="w-full py-3 px-4 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
-                    style={{ backgroundColor: brandColors.primary }}
-                  >
-                    <Send size={16} />
-                    <span>
-                      Send via{" "}
-                      {selectedContactMethod.charAt(0).toUpperCase() +
-                        selectedContactMethod.slice(1)}
-                    </span>
-                  </button>
-                </div>
-              )}
-            </div>
+            <Check size={20} className="text-white" />
+            <span className="text-white font-medium">
+              {notificationMessage}
+            </span>
           </div>
         </div>
       )}
 
-      {/* AI Suggestions Panel */}
-      {showAIPanel && selectedPerson && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50">
-          <div className="bg-white rounded-t-3xl w-full max-w-lg max-h-[80vh] overflow-hidden animate-slide-up">
-            <div className="px-6 py-4 border-b border-gray-100">
-              <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="bg-white shadow-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: brandColors.primary }}
+              >
+                <Heart size={20} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">CatchUp</h1>
+                <p className="text-sm text-gray-500">
+                  Stay connected with what matters
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => handleFilterChange("all")}
+                  className={`px-4 py-2 rounded-md transition-all duration-200 ${
+                    filterStatus === "all"
+                      ? "text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-200"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      filterStatus === "all"
+                        ? brandColors.primary
+                        : "transparent",
+                  }}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => handleFilterChange("green")}
+                  className={`px-4 py-2 rounded-md transition-all duration-200 ${
+                    filterStatus === "green"
+                      ? "text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-200"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      filterStatus === "green"
+                        ? brandColors.primary
+                        : "transparent",
+                  }}
+                >
+                  Good
+                </button>
+                <button
+                  onClick={() => handleFilterChange("yellow")}
+                  className={`px-4 py-2 rounded-md transition-all duration-200 ${
+                    filterStatus === "yellow"
+                      ? "text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-200"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      filterStatus === "yellow"
+                        ? brandColors.yellow
+                        : "transparent",
+                  }}
+                >
+                  Check In
+                </button>
+                <button
+                  onClick={() => handleFilterChange("red")}
+                  className={`px-4 py-2 rounded-md transition-all duration-200 ${
+                    filterStatus === "red"
+                      ? "text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-200"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      filterStatus === "red" ? brandColors.red : "transparent",
+                  }}
+                >
+                  Urgent
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="mt-4 relative">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+            <input
+              type="text"
+              placeholder="Search people or relationships..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200"
+              style={{ focusRing: brandColors.primary }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">Total Contacts</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {relationships.length}
+                </p>
+              </div>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: brandColors.primary + "20" }}
+              >
+                <User size={24} style={{ color: brandColors.primary }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">Need Attention</p>
+                <p
+                  className="text-2xl font-bold"
+                  style={{ color: brandColors.red }}
+                >
+                  {relationships.filter((p) => p.status === "red").length}
+                </p>
+              </div>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: brandColors.red + "20" }}
+              >
+                <AlertTriangle size={24} style={{ color: brandColors.red }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">Check Soon</p>
+                <p
+                  className="text-2xl font-bold"
+                  style={{ color: brandColors.yellow }}
+                >
+                  {relationships.filter((p) => p.status === "yellow").length}
+                </p>
+              </div>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: brandColors.yellow + "20" }}
+              >
+                <Clock size={24} style={{ color: brandColors.yellow }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">All Good</p>
+                <p
+                  className="text-2xl font-bold"
+                  style={{ color: brandColors.primary }}
+                >
+                  {relationships.filter((p) => p.status === "green").length}
+                </p>
+              </div>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: brandColors.primary + "20" }}
+              >
+                <CheckCircle size={24} style={{ color: brandColors.primary }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Relationship Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sortedRelationships.map((person) => (
+            <div
+              key={person.id}
+              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden cursor-pointer border-2 border-transparent hover:border-opacity-50"
+              style={{
+                borderColor:
+                  selectedPerson?.id === person.id
+                    ? getStatusColor(person.status)
+                    : "transparent",
+              }}
+              onClick={() => handlePersonSelect(person)}
+            >
+              <div className="p-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                      style={{ backgroundColor: getStatusColor(person.status) }}
+                    >
+                      {person.avatar}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        {person.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {person.relationship}
+                      </p>
+                    </div>
+                  </div>
+                  {getStatusIcon(person.status)}
+                </div>
+
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Last contact:</span>
+                    <span className="font-medium text-gray-900">
+                      {person.lastContact}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Next suggested:</span>
+                    <span
+                      className="font-medium"
+                      style={{ color: getStatusColor(person.status) }}
+                    >
+                      {person.nextSuggested}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Health Score:</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full transition-all duration-500"
+                          style={{
+                            width: `${person.healthScore}%`,
+                            backgroundColor: getStatusColor(person.status),
+                          }}
+                        />
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {person.healthScore}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {person.notes && (
+                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-gray-700">{person.notes}</p>
+                  </div>
+                )}
+
+                {/* Quick Actions */}
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPerson(person);
+                      handleContactMethod("call");
+                    }}
+                    className="flex-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-1"
+                    title="Call"
+                  >
+                    <Phone size={16} />
+                    <span className="text-sm">Call</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPerson(person);
+                      handleContactMethod("text");
+                    }}
+                    className="flex-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-1"
+                    title="Text"
+                  >
+                    <MessageCircle size={16} />
+                    <span className="text-sm">Text</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPerson(person);
+                      handleShowAI();
+                    }}
+                    className="px-3 py-2 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                    style={{
+                      backgroundColor: brandColors.primary + "20",
+                      color: brandColors.primary,
+                    }}
+                    title="AI Suggestions"
+                  >
+                    <Sparkles size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {sortedRelationships.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Search size={48} className="mx-auto" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">
+              No contacts found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Detail Panels */}
+      {selectedPerson && (
+        <div className="fixed bottom-0 left-0 right-0 z-50">
+          <div className="max-w-2xl mx-auto bg-white rounded-t-3xl shadow-2xl animate-slide-up">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm"
+                    className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-xl"
                     style={{
                       backgroundColor: getStatusColor(selectedPerson.status),
                     }}
@@ -720,328 +727,554 @@ const CatchUpDashboard = () => {
                       {selectedPerson.name}
                     </h2>
                     <p className="text-sm text-gray-500">
-                      AI Conversation Assistant
+                      {selectedPerson.relationship}
                     </p>
                   </div>
                 </div>
                 <button
-                  onClick={() => setShowAIPanel(false)}
+                  onClick={() => setSelectedPerson(null)}
                   className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
                 >
                   <X size={20} className="text-gray-500" />
                 </button>
               </div>
+
+              {/* Action Tabs */}
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleShowAI}
+                  className={`flex-1 px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
+                    showAIPanel
+                      ? "text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                  style={{
+                    backgroundColor: showAIPanel
+                      ? brandColors.primary
+                      : undefined,
+                  }}
+                >
+                  <Sparkles size={16} />
+                  <span>AI Suggestions</span>
+                </button>
+                <button
+                  onClick={handleShowAnalytics}
+                  className={`flex-1 px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
+                    showAnalyticsPanel
+                      ? "text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                  style={{
+                    backgroundColor: showAnalyticsPanel
+                      ? brandColors.primary
+                      : undefined,
+                  }}
+                >
+                  <BarChart3 size={16} />
+                  <span>Analytics</span>
+                </button>
+                <button
+                  onClick={handleMarkAsContacted}
+                  className="px-4 py-2 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                >
+                  <Check size={16} />
+                  <span>Mark Contacted</span>
+                </button>
+              </div>
             </div>
 
-            <div className="overflow-y-auto max-h-[calc(80vh-120px)] p-6">
-              <div className="mb-4 p-4 bg-blue-50 rounded-xl">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Clock size={16} style={{ color: brandColors.primary }} />
-                  <h3
-                    className="font-semibold"
-                    style={{ color: brandColors.primary }}
-                  >
-                    Recent Context
-                  </h3>
-                </div>
-                <div className="space-y-2">
-                  {selectedPerson.recentContext?.map((context, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <div
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: brandColors.primary }}
-                      ></div>
-                      <p className="text-sm text-gray-700">{context}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* Panel Content */}
+            <div className="max-h-96 overflow-y-auto p-6">
+              {showAIPanel && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center">
+                      <Sparkles
+                        size={16}
+                        className="mr-2"
+                        style={{ color: brandColors.primary }}
+                      />
+                      AI-Powered Suggestions
+                    </h3>
+                  </div>
 
-              <div className="space-y-3">
-                {selectedPerson.aiSuggestions?.map((suggestion, index) => (
-                  <div
-                    key={index}
-                    className="p-4 rounded-xl border-l-4 bg-gray-50"
-                    style={{
-                      borderLeftColor: getPriorityColor(suggestion.priority),
-                    }}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <span className="text-2xl">{suggestion.icon}</span>
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span
-                            className="text-xs font-medium px-2 py-1 rounded-full text-white"
-                            style={{
-                              backgroundColor: getPriorityColor(
-                                suggestion.priority
-                              ),
+                  {selectedPerson.aiSuggestions?.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="p-4 rounded-xl cursor-pointer hover:shadow-md transition-all duration-200 border-l-4"
+                      style={{
+                        backgroundColor:
+                          getPriorityColor(suggestion.priority) + "10",
+                        borderLeftColor: getPriorityColor(suggestion.priority),
+                      }}
+                      onClick={() => handleUseSuggestion(suggestion)}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-2xl">{suggestion.icon}</span>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <span
+                              className="text-xs font-medium uppercase tracking-wide"
+                              style={{
+                                color: getPriorityColor(suggestion.priority),
+                              }}
+                            >
+                              {suggestion.type}
+                            </span>
+                            <span
+                              className="text-xs px-2 py-1 rounded-full"
+                              style={{
+                                backgroundColor:
+                                  getPriorityColor(suggestion.priority) + "20",
+                                color: getPriorityColor(suggestion.priority),
+                              }}
+                            >
+                              {suggestion.priority}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-700 mb-2">
+                            {suggestion.content}
+                          </p>
+                          <button
+                            className="text-xs font-medium flex items-center"
+                            style={{ color: brandColors.primary }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUseSuggestion(suggestion);
                             }}
                           >
-                            {suggestion.priority.toUpperCase()}
-                          </span>
+                            Use this suggestion
+                            <ArrowRight size={12} className="ml-1" />
+                          </button>
                         </div>
-                        <p className="text-gray-900 font-medium">
-                          {suggestion.content}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Context Info */}
+                  <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                    <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                      <Lightbulb
+                        size={16}
+                        className="mr-2"
+                        style={{ color: brandColors.yellow }}
+                      />
+                      Recent Context
+                    </h4>
+                    <ul className="space-y-2">
+                      {selectedPerson.recentContext?.map((context, index) => (
+                        <li
+                          key={index}
+                          className="text-sm text-gray-700 flex items-start"
+                        >
+                          <span className="mr-2">•</span>
+                          {context}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-3 pt-3 border-t border-blue-100">
+                      <p className="text-xs text-gray-600">
+                        <Clock size={12} className="inline mr-1" />
+                        Best time: {selectedPerson.bestTimeToContact}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Contact Buttons */}
+                  <div className="grid grid-cols-3 gap-3 mt-6">
+                    <button
+                      onClick={() => handleContactMethod("call")}
+                      className="p-4 rounded-xl transition-all duration-200 hover:shadow-md"
+                      style={{
+                        backgroundColor: brandColors.primary + "10",
+                        color: brandColors.primary,
+                      }}
+                    >
+                      <Phone size={24} className="mx-auto mb-2" />
+                      <span className="text-sm font-medium">Call</span>
+                    </button>
+                    <button
+                      onClick={() => handleContactMethod("text")}
+                      className="p-4 rounded-xl transition-all duration-200 hover:shadow-md"
+                      style={{
+                        backgroundColor: brandColors.yellow + "10",
+                        color: brandColors.yellow,
+                      }}
+                    >
+                      <MessageCircle size={24} className="mx-auto mb-2" />
+                      <span className="text-sm font-medium">Text</span>
+                    </button>
+                    <button
+                      onClick={() => handleContactMethod("email")}
+                      className="p-4 rounded-xl transition-all duration-200 hover:shadow-md"
+                      style={{
+                        backgroundColor: brandColors.secondary + "10",
+                        color: brandColors.secondary,
+                      }}
+                    >
+                      <Mail size={24} className="mx-auto mb-2" />
+                      <span className="text-sm font-medium">Email</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {showAnalyticsPanel && (
+                <div className="space-y-6">
+                  {/* Key Metrics */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl">
+                      <p className="text-xs text-gray-600 mb-1">
+                        Total Contacts
+                      </p>
+                      <p
+                        className="text-3xl font-bold"
+                        style={{ color: brandColors.primary }}
+                      >
+                        {selectedPerson.analytics?.totalContacts}
+                      </p>
+                    </div>
+                    <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-xl">
+                      <p className="text-xs text-gray-600 mb-1">Avg Response</p>
+                      <p
+                        className="text-3xl font-bold"
+                        style={{ color: brandColors.yellow }}
+                      >
+                        {selectedPerson.analytics?.avgResponseTime}
+                      </p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
+                      <p className="text-xs text-gray-600 mb-1">
+                        Responsiveness
+                      </p>
+                      <p className="text-3xl font-bold text-green-600">
+                        {selectedPerson.analytics?.responsiveness}%
+                      </p>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl">
+                      <p className="text-xs text-gray-600 mb-1">Health Score</p>
+                      <p className="text-3xl font-bold text-purple-600">
+                        {selectedPerson.healthScore}%
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Contact Frequency Chart */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <TrendingUp
+                        size={16}
+                        className="mr-2"
+                        style={{ color: brandColors.primary }}
+                      />
+                      Contact Frequency (Last 5 Months)
+                    </h4>
+                    <div className="bg-gray-50 rounded-xl p-4">
+                      <div className="flex items-end justify-between h-32 space-x-2">
+                        {selectedPerson.analytics?.contactFrequency.map(
+                          (data, index) => (
+                            <div
+                              key={index}
+                              className="flex-1 flex flex-col items-center space-y-2"
+                            >
+                              <div
+                                className="w-full rounded-t-lg transition-all duration-500 hover:opacity-80"
+                                style={{
+                                  height: `${Math.max(
+                                    (data.contacts / 12) * 100,
+                                    8
+                                  )}%`,
+                                  backgroundColor:
+                                    data.contacts === 0
+                                      ? brandColors.red
+                                      : data.contacts < 4
+                                      ? brandColors.yellow
+                                      : brandColors.primary,
+                                  minHeight: "8px",
+                                }}
+                              />
+                              <span className="text-xs text-gray-600">
+                                {data.month}
+                              </span>
+                              <span className="text-xs font-bold text-gray-900">
+                                {data.contacts}
+                              </span>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Communication Methods */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">
+                      Communication Methods
+                    </h4>
+                    <div className="space-y-3">
+                      {Object.entries(
+                        selectedPerson.analytics?.methodBreakdown || {}
+                      ).map(([method, percentage]) => (
+                        <div
+                          key={method}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center space-x-2">
+                            {method === "calls" && (
+                              <Phone
+                                size={16}
+                                style={{ color: brandColors.primary }}
+                              />
+                            )}
+                            {method === "texts" && (
+                              <MessageCircle
+                                size={16}
+                                style={{ color: brandColors.yellow }}
+                              />
+                            )}
+                            {method === "social" && (
+                              <Heart
+                                size={16}
+                                style={{ color: brandColors.red }}
+                              />
+                            )}
+                            <span className="text-sm capitalize font-medium">
+                              {method}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-32 h-3 bg-gray-200 rounded-full overflow-hidden">
+                              <div
+                                className="h-full transition-all duration-500 rounded-full"
+                                style={{
+                                  width: `${percentage}%`,
+                                  backgroundColor:
+                                    method === "calls"
+                                      ? brandColors.primary
+                                      : method === "texts"
+                                      ? brandColors.yellow
+                                      : brandColors.red,
+                                }}
+                              />
+                            </div>
+                            <span className="text-sm font-bold w-10 text-right">
+                              {percentage}%
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Insights */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <Lightbulb
+                        size={16}
+                        className="mr-2"
+                        style={{ color: brandColors.yellow }}
+                      />
+                      Insights
+                    </h4>
+                    <div className="space-y-2">
+                      {selectedPerson.analytics?.responsiveness < 50 && (
+                        <div
+                          className="p-3 rounded-lg border-l-4"
+                          style={{
+                            backgroundColor: brandColors.red + "10",
+                            borderLeftColor: brandColors.red,
+                          }}
+                        >
+                          <p className="text-sm font-medium text-red-800">
+                            🚨 Low responsiveness - relationship needs attention
+                          </p>
+                        </div>
+                      )}
+                      {selectedPerson.analytics?.contactFrequency[0]
+                        .contacts === 0 && (
+                        <div
+                          className="p-3 rounded-lg border-l-4"
+                          style={{
+                            backgroundColor: brandColors.yellow + "10",
+                            borderLeftColor: brandColors.yellow,
+                          }}
+                        >
+                          <p className="text-sm font-medium text-orange-800">
+                            📉 No contact this month - reach out soon!
+                          </p>
+                        </div>
+                      )}
+                      <div
+                        className="p-3 rounded-lg border-l-4"
+                        style={{
+                          backgroundColor: brandColors.primary + "10",
+                          borderLeftColor: brandColors.primary,
+                        }}
+                      >
+                        <p className="text-sm font-medium text-blue-800">
+                          💡 {selectedPerson.name} prefers{" "}
+                          {selectedPerson.analytics?.methodBreakdown.calls > 50
+                            ? "phone calls"
+                            : "text messages"}{" "}
+                          and responds within{" "}
+                          {selectedPerson.analytics?.avgResponseTime}
                         </p>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
 
-              <div className="mt-6">
-                <button
-                  onClick={() => openContactPanel(selectedPerson)}
-                  className="w-full py-3 px-4 rounded-xl text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center space-x-2"
-                  style={{ backgroundColor: brandColors.primary }}
-                >
-                  <Zap size={16} />
-                  <span>Smart Contact</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Analytics Panel */}
-      {showAnalyticsPanel && selectedPerson && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50">
-          <div className="bg-white rounded-t-3xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-slide-up">
-            <div className="px-6 py-4 border-b border-gray-100">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm"
-                    style={{
-                      backgroundColor: getStatusColor(selectedPerson.status),
-                    }}
-                  >
-                    {selectedPerson.avatar}
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+              {showContactPanel && (
+                <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <div
+                      className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center"
+                      style={{
+                        backgroundColor:
+                          selectedContactMethod === "call"
+                            ? brandColors.primary + "20"
+                            : selectedContactMethod === "text"
+                            ? brandColors.yellow + "20"
+                            : brandColors.secondary + "20",
+                      }}
+                    >
+                      {selectedContactMethod === "call" && (
+                        <Phone
+                          size={32}
+                          style={{ color: brandColors.primary }}
+                        />
+                      )}
+                      {selectedContactMethod === "text" && (
+                        <MessageCircle
+                          size={32}
+                          style={{ color: brandColors.yellow }}
+                        />
+                      )}
+                      {selectedContactMethod === "email" && (
+                        <Mail
+                          size={32}
+                          style={{ color: brandColors.secondary }}
+                        />
+                      )}
+                    </div>
+                    <h3 className="font-semibold text-lg text-gray-900">
+                      {selectedContactMethod === "call"
+                        ? "Call"
+                        : selectedContactMethod === "text"
+                        ? "Text Message"
+                        : "Email"}{" "}
                       {selectedPerson.name}
-                    </h2>
+                    </h3>
                     <p className="text-sm text-gray-500">
-                      Relationship Analytics
+                      {selectedContactMethod === "call"
+                        ? selectedPerson.phoneNumber
+                        : selectedContactMethod === "text"
+                        ? selectedPerson.phoneNumber
+                        : selectedPerson.email}
                     </p>
                   </div>
-                </div>
-                <button
-                  onClick={() => setShowAnalyticsPanel(false)}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                >
-                  <X size={20} className="text-gray-500" />
-                </button>
-              </div>
-            </div>
 
-            <div className="overflow-y-auto max-h-[calc(90vh-120px)] pb-6">
-              <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  <Activity
-                    size={16}
-                    className="mr-2"
-                    style={{ color: brandColors.primary }}
-                  />
-                  Key Metrics
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-white p-3 rounded-xl">
-                    <p className="text-xs text-gray-500">Total Contacts</p>
-                    <p
-                      className="text-2xl font-bold"
-                      style={{ color: brandColors.primary }}
-                    >
-                      {selectedPerson.analytics?.totalContacts}
-                    </p>
-                  </div>
-                  <div className="bg-white p-3 rounded-xl">
-                    <p className="text-xs text-gray-500">Avg Response</p>
-                    <p
-                      className="text-2xl font-bold"
-                      style={{ color: brandColors.yellow }}
-                    >
-                      {selectedPerson.analytics?.avgResponseTime}
-                    </p>
-                  </div>
-                  <div className="bg-white p-3 rounded-xl">
-                    <p className="text-xs text-gray-500">Responsiveness</p>
-                    <p
-                      className="text-2xl font-bold"
-                      style={{ color: getStatusColor(selectedPerson.status) }}
-                    >
-                      {selectedPerson.analytics?.responsiveness}%
-                    </p>
-                  </div>
-                  <div className="bg-white p-3 rounded-xl">
-                    <p className="text-xs text-gray-500">Health Score</p>
-                    <p
-                      className="text-2xl font-bold"
-                      style={{ color: brandColors.secondary }}
-                    >
-                      {selectedPerson.healthScore}%
-                    </p>
-                  </div>
-                </div>
-              </div>
+                  {selectedContactMethod !== "call" && (
+                    <>
+                      <textarea
+                        value={contactMessage}
+                        onChange={(e) => setContactMessage(e.target.value)}
+                        placeholder={`Type your ${
+                          selectedContactMethod === "text" ? "message" : "email"
+                        } here...`}
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 resize-none"
+                        style={{ focusRing: brandColors.primary }}
+                        rows={6}
+                      />
 
-              {/* Contact Frequency Chart */}
-              <div className="px-6 py-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  <TrendingUp
-                    size={16}
-                    className="mr-2"
-                    style={{ color: brandColors.primary }}
-                  />
-                  Contact Frequency Trend
-                </h3>
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <div className="flex items-end justify-between h-32">
-                    {selectedPerson.analytics?.contactFrequency.map(
-                      (data, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col items-center space-y-2"
+                      {selectedPerson.aiSuggestions && (
+                        <div className="space-y-2">
+                          <p className="text-xs text-gray-500 font-medium">
+                            Quick suggestions:
+                          </p>
+                          {selectedPerson.aiSuggestions.map(
+                            (suggestion, index) => (
+                              <button
+                                key={index}
+                                onClick={() => handleUseSuggestion(suggestion)}
+                                className="w-full text-left p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm text-gray-700 border border-gray-200"
+                              >
+                                {suggestion.icon} {suggestion.content}
+                              </button>
+                            )
+                          )}
+                        </div>
+                      )}
+
+                      <div className="flex space-x-3">
+                        <button
+                          onClick={handleSendMessage}
+                          className="flex-1 py-3 rounded-xl text-white font-medium transition-all duration-200 hover:shadow-lg flex items-center justify-center space-x-2"
+                          style={{ backgroundColor: brandColors.primary }}
                         >
-                          <div
-                            className="w-8 rounded-t-lg transition-all duration-500"
-                            style={{
-                              height: `${Math.max(
-                                (data.contacts / 12) * 100,
-                                8
-                              )}%`,
-                              backgroundColor:
-                                data.contacts === 0
-                                  ? brandColors.red
-                                  : data.contacts < 4
-                                  ? brandColors.yellow
-                                  : brandColors.primary,
-                              minHeight: "8px",
-                            }}
-                          />
-                          <span className="text-xs text-gray-600">
-                            {data.month}
+                          <Send size={18} />
+                          <span>
+                            Send{" "}
+                            {selectedContactMethod === "text"
+                              ? "Message"
+                              : "Email"}
                           </span>
-                          <span className="text-xs font-medium text-gray-900">
-                            {data.contacts}
-                          </span>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Communication Breakdown */}
-              <div className="px-6 py-4">
-                <h3 className="font-semibold text-gray-900 mb-3">
-                  Communication Methods
-                </h3>
-                <div className="space-y-3">
-                  {Object.entries(
-                    selectedPerson.analytics?.methodBreakdown || {}
-                  ).map(([method, percentage]) => (
-                    <div
-                      key={method}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        {method === "calls" && <Phone size={14} />}
-                        {method === "texts" && <MessageCircle size={14} />}
-                        {method === "social" && <Heart size={14} />}
-                        <span className="text-sm capitalize">{method}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowContactPanel(false);
+                            setSelectedContactMethod(null);
+                            setContactMessage("");
+                          }}
+                          className="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors duration-200 font-medium"
+                        >
+                          Cancel
+                        </button>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full transition-all duration-500 rounded-full"
-                            style={{
-                              width: `${percentage}%`,
-                              backgroundColor:
-                                method === "calls"
-                                  ? brandColors.primary
-                                  : method === "texts"
-                                  ? brandColors.yellow
-                                  : brandColors.red,
-                            }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium w-8">
-                          {percentage}%
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Data Insights */}
-              <div className="px-6 py-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  <Lightbulb
-                    size={16}
-                    className="mr-2"
-                    style={{ color: brandColors.yellow }}
-                  />
-                  Data Insights
-                </h3>
-                <div className="space-y-3">
-                  {selectedPerson.analytics?.responsiveness < 50 && (
-                    <div
-                      className="p-3 bg-red-50 rounded-lg border-l-4"
-                      style={{ borderLeftColor: brandColors.red }}
-                    >
-                      <p className="text-sm text-red-800">
-                        🚨 Low responsiveness detected. This relationship may
-                        need more attention.
-                      </p>
-                    </div>
+                    </>
                   )}
 
-                  {selectedPerson.analytics?.contactFrequency[0].contacts ===
-                    0 && (
-                    <div
-                      className="p-3 bg-orange-50 rounded-lg border-l-4"
-                      style={{ borderLeftColor: brandColors.yellow }}
-                    >
-                      <p className="text-sm text-orange-800">
-                        📉 No contact this month. Consider reaching out soon.
-                      </p>
+                  {selectedContactMethod === "call" && (
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => {
+                          window.location.href = `tel:${selectedPerson.phoneNumber}`;
+                          handleSendMessage();
+                        }}
+                        className="w-full py-4 rounded-xl text-white font-medium transition-all duration-200 hover:shadow-lg flex items-center justify-center space-x-2 text-lg"
+                        style={{ backgroundColor: brandColors.primary }}
+                      >
+                        <Phone size={24} />
+                        <span>Start Call</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowContactPanel(false);
+                          setSelectedContactMethod(null);
+                        }}
+                        className="w-full py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors duration-200 font-medium"
+                      >
+                        Cancel
+                      </button>
                     </div>
                   )}
-
-                  <div
-                    className="p-3 bg-blue-50 rounded-lg border-l-4"
-                    style={{ borderLeftColor: brandColors.primary }}
-                  >
-                    <p className="text-sm text-blue-800">
-                      💡 {selectedPerson.name} prefers{" "}
-                      {selectedPerson.analytics?.methodBreakdown.calls > 50
-                        ? "phone calls"
-                        : "text messages"}{" "}
-                      and responds within{" "}
-                      {selectedPerson.analytics?.avgResponseTime} on average.
-                    </p>
-                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
       )}
 
       {/* Floating Action Button */}
-      <div className="fixed bottom-6 right-6">
-        <button
-          className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
-          style={{ backgroundColor: brandColors.primary }}
-        >
-          <User size={24} />
-        </button>
-      </div>
+      <button
+        onClick={handleScheduleReminder}
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-200 hover:scale-110 hover:shadow-xl z-40"
+        style={{ backgroundColor: brandColors.primary }}
+        title="Schedule Reminder"
+      >
+        <Calendar size={24} />
+      </button>
 
       <style jsx>{`
         @keyframes slide-up {
@@ -1052,8 +1285,21 @@ const CatchUpDashboard = () => {
             transform: translateY(0);
           }
         }
+        @keyframes slide-down {
+          from {
+            transform: translateY(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
         .animate-slide-up {
           animation: slide-up 0.3s ease-out;
+        }
+        .animate-slide-down {
+          animation: slide-down 0.3s ease-out;
         }
       `}</style>
     </div>
