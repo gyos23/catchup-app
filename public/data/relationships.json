@@ -1,0 +1,731 @@
+{
+  "generatedAt": "2026-04-16T10:39:36.948Z",
+  "source": "iMessage",
+  "relationships": [
+    {
+      "id": "dvtg98u0wvm",
+      "name": "The babysitters club",
+      "avatar": "TB",
+      "phoneNumber": "",
+      "isGroup": true,
+      "participants": [
+        "Rizz Caraballo",
+        "Charles Hamlin",
+        "Joshua Christie"
+      ],
+      "participantCount": 3,
+      "status": "green",
+      "healthScore": 100,
+      "lastContact": "Yesterday",
+      "lastContactDate": "2026-04-15 21:20:47",
+      "contactFrequency": "Daily",
+      "nextSuggested": "Now",
+      "relationship": "Group Chat",
+      "notes": "Laughed at NASTY",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "positive",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Laughed at NASTY"
+        },
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "NASTY"
+        },
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Funny you say that. I been looking for Sean John velour suits the last few months."
+        },
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Got a shoulder workout for yall"
+        },
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Laughed at Ive reached the velour/sweat suit era"
+        },
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Emphasized Im becoming anti jeans"
+        }
+      ],
+      "analytics": {
+        "totalContacts": 318,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 60
+          },
+          {
+            "month": "Feb",
+            "contacts": 222
+          },
+          {
+            "month": "Mar",
+            "contacts": 138
+          },
+          {
+            "month": "Apr",
+            "contacts": 534
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 44,
+          "texts": 46,
+          "social": 10
+        },
+        "responsiveness": 257,
+        "initiationRatio": {
+          "me": 138,
+          "them": 816
+        }
+      }
+    },
+    {
+      "id": "ytiwrxuma1a",
+      "name": "Yli Liriano",
+      "avatar": "YL",
+      "phoneNumber": "+19172920767",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "green",
+      "healthScore": 94,
+      "lastContact": "Yesterday",
+      "lastContactDate": "2026-04-15 19:34:31",
+      "contactFrequency": "Daily",
+      "nextSuggested": "Now",
+      "relationship": "Contact",
+      "notes": "Hey, what size is Rian and footwear?",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "positive",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "Yesterday",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Hey, what size is Rian and footwear?"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Tmobile comes out tomorrow. Expect it."
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Also T-Mobile bill went up $4 for your calls in Ireland"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "For *"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Loved a movie"
+        },
+        {
+          "date": "4 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Artemis"
+        }
+      ],
+      "analytics": {
+        "totalContacts": 212,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 41
+          },
+          {
+            "month": "Feb",
+            "contacts": 68
+          },
+          {
+            "month": "Mar",
+            "contacts": 35
+          },
+          {
+            "month": "Apr",
+            "contacts": 68
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 60,
+          "texts": 30,
+          "social": 10
+        },
+        "responsiveness": 83,
+        "initiationRatio": {
+          "me": 37,
+          "them": 175
+        }
+      }
+    },
+    {
+      "id": "r7lzv9ljlbk",
+      "name": "Charles Hamlin",
+      "avatar": "CH",
+      "phoneNumber": "+17186639699",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "green",
+      "healthScore": 77,
+      "lastContact": "2 days ago",
+      "lastContactDate": "2026-04-14 18:37:33",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "In 2 days",
+      "relationship": "Contact",
+      "notes": "Do you know whats making you  perpetually sad? You dont have to share but Im cur",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "positive",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Do you know whats making you  perpetually sad? You dont have to share but Im curious if you know the"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Nunca he ido en persona"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Loved They do video conferencing. Only time I saw a physical therapist was  a brother up in Atlanta "
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "They do video conferencing. Only time I saw a physical therapist was  a brother up in Atlanta who wa"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "I saw a commercial for betterhelp and thought I could sign up to get someone on the US side"
+        },
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "I have to see what coverage I have with my health insurance."
+        }
+      ],
+      "analytics": {
+        "totalContacts": 24,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 0
+          },
+          {
+            "month": "Feb",
+            "contacts": 0
+          },
+          {
+            "month": "Mar",
+            "contacts": 0
+          },
+          {
+            "month": "Apr",
+            "contacts": 24
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 32,
+          "texts": 58,
+          "social": 10
+        },
+        "responsiveness": 38,
+        "initiationRatio": {
+          "me": 15,
+          "them": 9
+        }
+      }
+    },
+    {
+      "id": "sezg4eybgap",
+      "name": "Janice Liriano",
+      "avatar": "JL",
+      "phoneNumber": "+353858738801",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "green",
+      "healthScore": 73,
+      "lastContact": "2 days ago",
+      "lastContactDate": "2026-04-14 15:22:34",
+      "contactFrequency": "Weekly",
+      "nextSuggested": "Now",
+      "relationship": "Contact",
+      "notes": "Thanks honey",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "positive",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "2 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Thanks honey"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Zest usually have a fridge of cakes you can buy, theres a fruit pie that looks nice"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Can you call me after the film please, Id like to get dessert for tomorrow. Hope you are enjoying yo"
+        },
+        {
+          "date": "23 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "You missed 1 call from me, the latest at 12:49 on 23.05.2024. To reply just press your call button. "
+        }
+      ],
+      "analytics": {
+        "totalContacts": 58,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 6
+          },
+          {
+            "month": "Feb",
+            "contacts": 25
+          },
+          {
+            "month": "Mar",
+            "contacts": 20
+          },
+          {
+            "month": "Apr",
+            "contacts": 7
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 49,
+          "texts": 41,
+          "social": 10
+        },
+        "responsiveness": 66,
+        "initiationRatio": {
+          "me": 20,
+          "them": 38
+        }
+      }
+    },
+    {
+      "id": "tef4w6isabd",
+      "name": "Rizz Caraballo",
+      "avatar": "RC",
+      "phoneNumber": "+16469157602",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "yellow",
+      "healthScore": 64,
+      "lastContact": "4 days ago",
+      "lastContactDate": "2026-04-12 18:34:03",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "In 2 days",
+      "relationship": "Contact",
+      "notes": "Lol tag youre it",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "neutral",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "4 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Lol tag youre it"
+        },
+        {
+          "date": "4 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Ill call you right back."
+        },
+        {
+          "date": "4 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Te llame hermano"
+        },
+        {
+          "date": "4 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Tato"
+        },
+        {
+          "date": "4 days ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "me",
+          "summary": "Give me a call when youre up later. A catch up"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Hows that transition going?"
+        }
+      ],
+      "analytics": {
+        "totalContacts": 14,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 0
+          },
+          {
+            "month": "Feb",
+            "contacts": 1
+          },
+          {
+            "month": "Mar",
+            "contacts": 5
+          },
+          {
+            "month": "Apr",
+            "contacts": 8
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 53,
+          "texts": 37,
+          "social": 10
+        },
+        "responsiveness": 71,
+        "initiationRatio": {
+          "me": 4,
+          "them": 10
+        }
+      }
+    },
+    {
+      "id": "qfrzrqza9cm",
+      "name": "Sandra Liriano",
+      "avatar": "SL",
+      "phoneNumber": "+19176232715",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "yellow",
+      "healthScore": 53,
+      "lastContact": "5 days ago",
+      "lastContactDate": "2026-04-11 03:30:12",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "In 2 days",
+      "relationship": "Contact",
+      "notes": "",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "neutral",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [],
+      "analytics": {
+        "totalContacts": 13,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 1
+          },
+          {
+            "month": "Feb",
+            "contacts": 9
+          },
+          {
+            "month": "Mar",
+            "contacts": 2
+          },
+          {
+            "month": "Apr",
+            "contacts": 1
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 65,
+          "texts": 25,
+          "social": 10
+        },
+        "responsiveness": 92,
+        "initiationRatio": {
+          "me": 1,
+          "them": 12
+        }
+      }
+    },
+    {
+      "id": "kuzu59gajzs",
+      "name": "Ashley Little",
+      "avatar": "AL",
+      "phoneNumber": "+14045508142",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "yellow",
+      "healthScore": 42,
+      "lastContact": "2 weeks ago",
+      "lastContactDate": "2026-03-30 21:08:30",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "Now",
+      "relationship": "Contact",
+      "notes": "",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "neutral",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [],
+      "analytics": {
+        "totalContacts": 19,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 2
+          },
+          {
+            "month": "Feb",
+            "contacts": 7
+          },
+          {
+            "month": "Mar",
+            "contacts": 10
+          },
+          {
+            "month": "Apr",
+            "contacts": 0
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 35,
+          "texts": 55,
+          "social": 10
+        },
+        "responsiveness": 42,
+        "initiationRatio": {
+          "me": 11,
+          "them": 8
+        }
+      }
+    },
+    {
+      "id": "xnuvfcu5v6",
+      "name": "The Sandlot",
+      "avatar": "TS",
+      "phoneNumber": "",
+      "isGroup": true,
+      "participants": [
+        "Jean De Jesus",
+        "Rick Hierro",
+        "Rick Hierro",
+        "+19732807118",
+        "+16463054247",
+        "Argenis Hierro",
+        "Gerard Valentin Hernandez",
+        "+19174201588",
+        "Anthony Caba"
+      ],
+      "participantCount": 8,
+      "status": "yellow",
+      "healthScore": 42,
+      "lastContact": "3 weeks ago",
+      "lastContactDate": "2026-03-29 14:27:05",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "Now",
+      "relationship": "Group Chat",
+      "notes": "https://www.instagram.com/reel/DV4FRLhsUcJ/?igsh=ZXY0NTkzdmRsN3Ry",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "neutral",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "3 weeks ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "https://www.instagram.com/reel/DV4FRLhsUcJ/?igsh=ZXY0NTkzdmRsN3Ry"
+        },
+        {
+          "date": "4 weeks ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "https://www.instagram.com/reel/DWHR0wZAPko/?igsh=MWxtb2g1MGF1ZGh6eA=="
+        },
+        {
+          "date": "1 month ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "https://www.instagram.com/reel/DV2MBvOjsGD/?igsh=MTB2Y2loY2JibWJpeA=="
+        }
+      ],
+      "analytics": {
+        "totalContacts": 16,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 0
+          },
+          {
+            "month": "Feb",
+            "contacts": 0
+          },
+          {
+            "month": "Mar",
+            "contacts": 128
+          },
+          {
+            "month": "Apr",
+            "contacts": 0
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 40,
+          "texts": 50,
+          "social": 10
+        },
+        "responsiveness": 750,
+        "initiationRatio": {
+          "me": 8,
+          "them": 120
+        }
+      }
+    }
+  ]
+}
