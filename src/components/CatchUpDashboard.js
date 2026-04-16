@@ -1,7 +1,7 @@
 // CatchUp - Personal Relationship Assistant
 // Complete React Application
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   User,
   Phone,
@@ -23,6 +23,8 @@ import {
   Zap,
   ChevronLeft,
   Mail,
+  Target,
+  Plus,
 } from "lucide-react";
 
 const brandColors = {
@@ -38,6 +40,21 @@ const brandColors = {
   gray: "#c4ced3",
   yellow: "#f2a900",
 };
+
+// ─── Relationship Tags ────────────────────────────────────────────────────────
+const RELATIONSHIP_TAGS = [
+  { id: "family", label: "Family", icon: "👨‍👩‍👧‍👦" },
+  { id: "close_friend", label: "Close Friend", icon: "❤️" },
+  { id: "friend", label: "Friend", icon: "👥" },
+  { id: "work_colleague", label: "Work Colleague", icon: "💼" },
+  { id: "acquaintance", label: "Acquaintance", icon: "🤝" },
+];
+
+// ─── All topic categories (for add-buttons) ───────────────────────────────────
+const ALL_TOPIC_CATEGORIES = [
+  "Work", "Family", "Food & Dining", "Sports", "Travel",
+  "Entertainment", "Health", "Finance", "Tech", "Relationships",
+];
 
 // ─── Sample Data (fallback) ──────────────────────────────────────────────────
 const SAMPLE_RELATIONSHIPS = [
@@ -57,10 +74,10 @@ const SAMPLE_RELATIONSHIPS = [
     email: "sarah.chen@email.com",
     bestTimeToContact: "Weekday evenings after 6pm",
     mood: "excited",
-    topics: ["Career", "Yoga", "Food & Restaurants", "Travel"],
+    topics: ["Career", "Yoga", "Food & Dining", "Travel"],
     contactHistory: [
       { date: "3 days ago", medium: "Call", subject: "Career", initiatedBy: "me", summary: "Discussed her new job interview prep" },
-      { date: "10 days ago", medium: "Text", subject: "Food & Restaurants", initiatedBy: "them", summary: "She found a new brunch spot downtown" },
+      { date: "10 days ago", medium: "Text", subject: "Food & Dining", initiatedBy: "them", summary: "She found a new brunch spot downtown" },
       { date: "3 weeks ago", medium: "F2F", subject: "Life", initiatedBy: "me", summary: "Coffee catch-up — great energy, she's happy" },
       { date: "1 month ago", medium: "Call", subject: "Yoga", initiatedBy: "them", summary: "She raved about her new yoga instructor" },
       { date: "6 weeks ago", medium: "Text", subject: "Travel", initiatedBy: "me", summary: "Planning a possible trip for summer" },
@@ -82,7 +99,9 @@ const SAMPLE_RELATIONSHIPS = [
       ],
       methodBreakdown: { calls: 65, texts: 25, social: 10 },
       responsiveness: 95,
+      initiationRatio: { me: 23, them: 24 },
     },
+    scoreBreakdown: { recency: 35, freq: 30, balance: 20, trend: 10 },
   },
   {
     id: 2,
@@ -100,11 +119,11 @@ const SAMPLE_RELATIONSHIPS = [
     email: "marcus.j.dev@email.com",
     bestTimeToContact: "Weekend mornings",
     mood: "stressed but proud",
-    topics: ["Tech & Work", "Gaming", "NBA", "Career"],
+    topics: ["Tech", "Sports", "Work"],
     contactHistory: [
       { date: "2 weeks ago", medium: "Text", subject: "Career", initiatedBy: "them", summary: "Told me about his promotion to Senior Dev" },
       { date: "1 month ago", medium: "Call", subject: "NBA", initiatedBy: "me", summary: "Long catch-up after the playoffs" },
-      { date: "6 weeks ago", medium: "Text", subject: "Gaming", initiatedBy: "them", summary: "Shared a clip from his stream" },
+      { date: "6 weeks ago", medium: "Text", subject: "Sports", initiatedBy: "them", summary: "Shared a clip from his stream" },
       { date: "2 months ago", medium: "F2F", subject: "Life", initiatedBy: "me", summary: "Beers and dinner — talked about his relationship" },
     ],
     aiSuggestions: [
@@ -124,7 +143,9 @@ const SAMPLE_RELATIONSHIPS = [
       ],
       methodBreakdown: { calls: 20, texts: 70, social: 10 },
       responsiveness: 70,
+      initiationRatio: { me: 10, them: 18 },
     },
+    scoreBreakdown: { recency: 20, freq: 18, balance: 20, trend: 5 },
   },
   {
     id: 3,
@@ -142,7 +163,7 @@ const SAMPLE_RELATIONSHIPS = [
     email: "emily.rodriguez@company.com",
     bestTimeToContact: "Weekday lunch break",
     mood: "might be hurt by lack of contact",
-    topics: ["Work Projects", "Wedding Planning", "Design", "Travel"],
+    topics: ["Work", "Travel"],
     contactHistory: [
       { date: "6 weeks ago", medium: "Text", subject: "Work Projects", initiatedBy: "them", summary: "Needed help with a deadline — I responded late" },
       { date: "3 months ago", medium: "F2F", subject: "Life", initiatedBy: "them", summary: "She told me about the engagement in person" },
@@ -166,9 +187,181 @@ const SAMPLE_RELATIONSHIPS = [
       ],
       methodBreakdown: { calls: 30, texts: 40, social: 30 },
       responsiveness: 35,
+      initiationRatio: { me: 2, them: 13 },
     },
+    scoreBreakdown: { recency: 5, freq: 6, balance: 8, trend: 0 },
   },
 ];
+
+// ─── useContactPrefs hook ─────────────────────────────────────────────────────
+function useContactPrefs(contactId) {
+  const STORAGE_KEY = "catchup_prefs";
+
+  function load() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function save(all) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  }
+
+  function getPrefs(all) {
+    return all[contactId] || { relationship: null, addedTopics: [], removedTopics: [], targetHealth: null };
+  }
+
+  const [prefs, setPrefs] = useState(() => getPrefs(load()));
+
+  // Keep in sync if contactId changes
+  useEffect(() => {
+    setPrefs(getPrefs(load()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactId]);
+
+  function update(patch) {
+    const all = load();
+    const current = getPrefs(all);
+    const next = { ...current, ...patch };
+    all[contactId] = next;
+    save(all);
+    setPrefs(next);
+  }
+
+  function setRelationship(value) {
+    update({ relationship: value });
+  }
+
+  function addTopic(topic) {
+    const all = load();
+    const current = getPrefs(all);
+    const added = [...new Set([...(current.addedTopics || []), topic])];
+    const removed = (current.removedTopics || []).filter((t) => t !== topic);
+    const next = { ...current, addedTopics: added, removedTopics: removed };
+    all[contactId] = next;
+    save(all);
+    setPrefs(next);
+  }
+
+  function removeTopic(topic, isDetected) {
+    const all = load();
+    const current = getPrefs(all);
+    let removed = current.removedTopics || [];
+    let added = current.addedTopics || [];
+    if (isDetected) {
+      removed = [...new Set([...removed, topic])];
+    } else {
+      added = added.filter((t) => t !== topic);
+    }
+    const next = { ...current, addedTopics: added, removedTopics: removed };
+    all[contactId] = next;
+    save(all);
+    setPrefs(next);
+  }
+
+  function setTargetHealth(value) {
+    update({ targetHealth: value });
+  }
+
+  // Compute effective topics: (detectedTopics - dismissed) + added
+  function computeTopics(detectedTopics) {
+    const removed = prefs.removedTopics || [];
+    const added = prefs.addedTopics || [];
+    const filtered = (detectedTopics || []).filter((t) => !removed.includes(t));
+    const extra = added.filter((t) => !filtered.includes(t));
+    return [...filtered, ...extra];
+  }
+
+  return {
+    relationship: prefs.relationship || null,
+    setRelationship,
+    addedTopics: prefs.addedTopics || [],
+    removedTopics: prefs.removedTopics || [],
+    addTopic,
+    removeTopic,
+    computeTopics,
+    targetHealth: prefs.targetHealth || null,
+    setTargetHealth,
+  };
+}
+
+// ─── Score suggestion engine ──────────────────────────────────────────────────
+function computeScoreBreakdown(person) {
+  // Try to use stored breakdown; otherwise approximate from healthScore
+  if (person.scoreBreakdown) return person.scoreBreakdown;
+  // Rough split of healthScore
+  const s = person.healthScore;
+  return { recency: Math.round(s * 0.4), freq: Math.round(s * 0.3), balance: Math.round(s * 0.2), trend: Math.round(s * 0.1) };
+}
+
+function generateGoalSuggestions(person) {
+  const suggestions = [];
+  const { recency, freq, balance, trend } = computeScoreBreakdown(person);
+
+  // Recency suggestions
+  if (recency < 40) {
+    const gain = 40 - recency;
+    suggestions.push({
+      icon: "⏰",
+      title: "Message today",
+      detail: `Boost your recency score from ${recency} → 40 (+${gain} pts) with one message right now`,
+      pts: gain,
+    });
+  }
+
+  // Frequency suggestions
+  if (freq < 30) {
+    const nextFreqScore = freq === 2 ? 6 : freq === 6 ? 12 : freq === 12 ? 18 : freq === 18 ? 24 : 30;
+    const gain = nextFreqScore - freq;
+    const needed = freq === 2 ? "at least every 2 weeks" : freq === 6 ? "at least weekly" : "multiple times a week";
+    suggestions.push({
+      icon: "📈",
+      title: "Reach out more often",
+      detail: `Message ${needed} to improve your frequency score ${freq} → ${nextFreqScore} (+${gain} pts)`,
+      pts: gain,
+    });
+  }
+
+  // Balance suggestions
+  if (balance < 20) {
+    const ratio = person.analytics?.initiationRatio || { me: 0, them: 1 };
+    const total = (ratio.me || 0) + (ratio.them || 0);
+    const currentPct = total > 0 ? Math.round((ratio.me / total) * 100) : 0;
+    if (currentPct < 15) {
+      const gain = (balance === 3 ? 8 : 14) - balance;
+      const target = currentPct < 5 ? "5%" : "15%";
+      suggestions.push({
+        icon: "🤝",
+        title: "Initiate more conversations",
+        detail: `You've started ${currentPct}% of chats. Reach out first to hit ${target}+ for a +${gain} pt balance boost`,
+        pts: gain,
+      });
+    } else {
+      const gain = 20 - balance;
+      suggestions.push({
+        icon: "🤝",
+        title: "Keep initiating",
+        detail: `You're at ${currentPct}% initiation. Push to 30%+ for full +${gain} balance pts`,
+        pts: gain,
+      });
+    }
+  }
+
+  // Trend suggestions
+  if (trend < 10) {
+    const gain = 10 - trend;
+    suggestions.push({
+      icon: "📊",
+      title: "Stay consistent this month",
+      detail: `Contact frequency is dropping. Match last month's activity to earn +${gain} trend pts`,
+      pts: gain,
+    });
+  }
+
+  return suggestions;
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -224,9 +417,329 @@ const getBestContactMethod = (person) => {
   return person.preferredMethod;
 };
 
+// ─── RelationshipTagPicker ────────────────────────────────────────────────────
+const RelationshipTagPicker = ({ selected, onSelect }) => {
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customValue, setCustomValue] = useState("");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (showCustomInput && inputRef.current) inputRef.current.focus();
+  }, [showCustomInput]);
+
+  function handleCustomSubmit(e) {
+    e.preventDefault();
+    const val = customValue.trim();
+    if (val) {
+      onSelect(val);
+      setCustomValue("");
+      setShowCustomInput(false);
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <p className="text-xs text-gray-500 mb-3 font-medium">RELATIONSHIP TYPE</p>
+      <div className="flex flex-wrap gap-2">
+        {RELATIONSHIP_TAGS.map((tag) => {
+          const isActive = selected === tag.label;
+          return (
+            <button
+              key={tag.id}
+              onClick={() => onSelect(isActive ? null : tag.label)}
+              className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+              style={{
+                backgroundColor: isActive ? brandColors.primary : "#f4f4f3",
+                color: isActive ? brandColors.white : brandColors.secondary,
+                border: `1.5px solid ${isActive ? brandColors.primary : "#e0e0e0"}`,
+              }}
+            >
+              <span>{tag.icon}</span>
+              <span>{tag.label}</span>
+            </button>
+          );
+        })}
+
+        {/* Custom tag */}
+        {!showCustomInput ? (
+          <button
+            onClick={() => setShowCustomInput(true)}
+            className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+            style={{
+              backgroundColor: "#f4f4f3",
+              color: brandColors.primary,
+              border: `1.5px dashed ${brandColors.primary}`,
+            }}
+          >
+            <Plus size={11} />
+            <span>Custom</span>
+          </button>
+        ) : (
+          <form onSubmit={handleCustomSubmit} className="flex items-center space-x-1">
+            <input
+              ref={inputRef}
+              type="text"
+              value={customValue}
+              onChange={(e) => setCustomValue(e.target.value)}
+              placeholder="Type tag…"
+              className="text-xs px-2 py-1.5 rounded-full border outline-none w-28"
+              style={{ borderColor: brandColors.primary, color: brandColors.darkBlue }}
+              onBlur={() => { if (!customValue.trim()) setShowCustomInput(false); }}
+            />
+            <button type="submit" className="text-xs font-semibold" style={{ color: brandColors.primary }}>OK</button>
+            <button type="button" onClick={() => setShowCustomInput(false)} className="text-gray-400"><X size={12} /></button>
+          </form>
+        )}
+
+        {/* Show if selected tag is a custom one (not in presets) */}
+        {selected && !RELATIONSHIP_TAGS.find((t) => t.label === selected) && (
+          <button
+            onClick={() => onSelect(null)}
+            className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs font-medium"
+            style={{ backgroundColor: brandColors.primary, color: brandColors.white, border: `1.5px solid ${brandColors.primary}` }}
+          >
+            <span>{selected}</span>
+            <X size={11} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ─── InteractiveTopics ────────────────────────────────────────────────────────
+const InteractiveTopics = ({ detectedTopics, addedTopics, removedTopics, addTopic, removeTopic, computeTopics }) => {
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customValue, setCustomValue] = useState("");
+  const customInputRef = useRef(null);
+
+  useEffect(() => {
+    if (showCustomInput && customInputRef.current) customInputRef.current.focus();
+  }, [showCustomInput]);
+
+  const effectiveTopics = computeTopics(detectedTopics);
+  const effectiveSet = new Set(effectiveTopics);
+
+  // Topics available to add: all predefined minus already shown
+  const availableToAdd = ALL_TOPIC_CATEGORIES.filter((t) => !effectiveSet.has(t));
+
+  function handleCustomSubmit(e) {
+    e.preventDefault();
+    const val = customValue.trim();
+    if (val) {
+      addTopic(val);
+      setCustomValue("");
+      setShowCustomInput(false);
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <div className="flex items-center space-x-2 mb-3">
+        <Lightbulb size={16} style={{ color: brandColors.yellow }} />
+        <h2 className="font-semibold text-gray-900">Shared Topics</h2>
+      </div>
+
+      {/* Active topics as dismissable chips */}
+      {effectiveTopics.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-3">
+          {effectiveTopics.map((topic) => {
+            const isDetected = (detectedTopics || []).includes(topic) && !removedTopics.includes(topic);
+            return (
+              <span
+                key={topic}
+                className="flex items-center space-x-1 text-xs px-3 py-1 rounded-full font-medium"
+                style={{ backgroundColor: "#e8f4fd", color: brandColors.primary }}
+              >
+                <span>{topic}</span>
+                <button
+                  onClick={() => removeTopic(topic, isDetected)}
+                  className="ml-1 hover:opacity-70 transition-opacity"
+                  style={{ color: brandColors.primary }}
+                >
+                  <X size={11} />
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Available predefined topics to add */}
+      {availableToAdd.length > 0 && (
+        <div className="mb-3">
+          <p className="text-xs text-gray-400 mb-2">Add a topic:</p>
+          <div className="flex flex-wrap gap-1.5">
+            {availableToAdd.slice(0, 6).map((topic) => (
+              <button
+                key={topic}
+                onClick={() => addTopic(topic)}
+                className="flex items-center space-x-1 text-xs px-2.5 py-1 rounded-full font-medium transition-all hover:opacity-80"
+                style={{ backgroundColor: "#f4f4f3", color: brandColors.secondary, border: `1px solid #e0e0e0` }}
+              >
+                <Plus size={10} />
+                <span>{topic}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Custom topic input */}
+      {!showCustomInput ? (
+        <button
+          onClick={() => setShowCustomInput(true)}
+          className="flex items-center space-x-1 text-xs px-3 py-1.5 rounded-full font-medium mt-1"
+          style={{ backgroundColor: "#f4f4f3", color: brandColors.primary, border: `1.5px dashed ${brandColors.primary}` }}
+        >
+          <Plus size={11} />
+          <span>Custom topic</span>
+        </button>
+      ) : (
+        <form onSubmit={handleCustomSubmit} className="flex items-center space-x-2 mt-1">
+          <input
+            ref={customInputRef}
+            type="text"
+            value={customValue}
+            onChange={(e) => setCustomValue(e.target.value)}
+            placeholder="e.g. Hiking"
+            className="text-xs px-3 py-1.5 rounded-full border outline-none flex-1"
+            style={{ borderColor: brandColors.primary }}
+            onBlur={() => { if (!customValue.trim()) setShowCustomInput(false); }}
+          />
+          <button type="submit" className="text-xs font-semibold" style={{ color: brandColors.primary }}>Add</button>
+          <button type="button" onClick={() => setShowCustomInput(false)} className="text-gray-400"><X size={12} /></button>
+        </form>
+      )}
+    </div>
+  );
+};
+
+// ─── ReachYourGoal section ────────────────────────────────────────────────────
+const ReachYourGoal = ({ person, targetHealth, setTargetHealth }) => {
+  const currentScore = person.healthScore;
+  const defaultTarget = Math.min(100, Math.ceil((currentScore + 5) / 5) * 5);
+  const target = targetHealth !== null ? targetHealth : defaultTarget;
+
+  const suggestions = generateGoalSuggestions(person);
+  const { recency, freq, balance, trend } = computeScoreBreakdown(person);
+
+  const maxGain = suggestions.reduce((sum, s) => sum + s.pts, 0);
+  const projectedMax = Math.min(100, currentScore + maxGain);
+
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <div className="flex items-center space-x-2 mb-4">
+        <Target size={16} style={{ color: brandColors.primary }} />
+        <h2 className="font-semibold text-gray-900">Reach Your Goal</h2>
+      </div>
+
+      {/* Score display */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-center">
+          <p className="text-xs text-gray-500">Current</p>
+          <p className="text-2xl font-bold" style={{ color: getStatusColor(person.status) }}>{currentScore}%</p>
+        </div>
+        <div className="flex-1 mx-4 h-1.5 rounded-full" style={{ backgroundColor: "#e0e0e0" }}>
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{
+              width: `${((target - currentScore) / Math.max(100 - currentScore, 1)) * 100}%`,
+              backgroundColor: brandColors.primary,
+            }}
+          />
+        </div>
+        <div className="text-center">
+          <p className="text-xs text-gray-500">Target</p>
+          <p className="text-2xl font-bold" style={{ color: brandColors.primary }}>{target}%</p>
+        </div>
+      </div>
+
+      {/* Slider */}
+      <div className="mb-1">
+        <input
+          type="range"
+          min={Math.min(currentScore, 95)}
+          max={100}
+          step={5}
+          value={target}
+          onChange={(e) => setTargetHealth(Number(e.target.value))}
+          className="w-full"
+          style={{ accentColor: brandColors.primary }}
+        />
+        <div className="flex justify-between text-xs text-gray-400 mt-0.5">
+          <span>{currentScore}%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      {/* Score breakdown */}
+      <div className="grid grid-cols-4 gap-2 my-4">
+        {[
+          { label: "Recency", val: recency, max: 40 },
+          { label: "Frequency", val: freq, max: 30 },
+          { label: "Balance", val: balance, max: 20 },
+          { label: "Trend", val: trend, max: 10 },
+        ].map(({ label, val, max }) => (
+          <div key={label} className="text-center">
+            <div className="text-xs text-gray-500 mb-1">{label}</div>
+            <div className="text-sm font-bold" style={{ color: val >= max * 0.7 ? brandColors.primary : val >= max * 0.4 ? brandColors.yellow : brandColors.red }}>
+              {val}/{max}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Suggestions */}
+      {suggestions.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-xs text-gray-500 font-medium mb-2">
+            Improve by up to +{maxGain} pts (max reachable: {projectedMax}%)
+          </p>
+          {suggestions.map((s, i) => (
+            <div
+              key={i}
+              className="flex items-start space-x-3 p-3 rounded-xl"
+              style={{ backgroundColor: "#f4f4f3" }}
+            >
+              <span className="text-xl flex-shrink-0">{s.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-800">{s.title}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{s.detail}</p>
+              </div>
+              <span
+                className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0 self-start mt-0.5"
+                style={{ backgroundColor: "#dbeafe", color: brandColors.primary }}
+              >
+                +{s.pts} pts
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {suggestions.length === 0 && (
+        <p className="text-sm text-gray-500 text-center py-2">You're already maxing out all score components 🎉</p>
+      )}
+    </div>
+  );
+};
+
 // ─── Detail View ─────────────────────────────────────────────────────────────
 const PersonDetailView = ({ person, onBack, onContact }) => {
   const maxContacts = Math.max(...person.analytics.contactFrequency.map(d => d.contacts), 1);
+
+  const {
+    relationship,
+    setRelationship,
+    addedTopics,
+    removedTopics,
+    addTopic,
+    removeTopic,
+    computeTopics,
+    targetHealth,
+    setTargetHealth,
+  } = useContactPrefs(String(person.id));
 
   return (
     <div
@@ -254,7 +767,9 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">{person.name}</h1>
-                <p className="text-blue-100 text-sm">{person.relationship}</p>
+                <p className="text-blue-100 text-sm">
+                  {relationship || person.relationship}
+                </p>
                 <div className="flex items-center space-x-2 mt-1">
                   {getStatusIcon(person.status)}
                   <span className="text-white text-sm font-medium">{person.healthScore}% health</span>
@@ -272,6 +787,9 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
       </div>
 
       <div className="px-4 py-4 space-y-4">
+
+        {/* Relationship Tag Picker */}
+        <RelationshipTagPicker selected={relationship} onSelect={setRelationship} />
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 gap-3">
@@ -324,24 +842,15 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
           </div>
         </div>
 
-        {/* Topics */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center space-x-2 mb-3">
-            <Lightbulb size={16} style={{ color: brandColors.yellow }} />
-            <h2 className="font-semibold text-gray-900">Shared Topics</h2>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {person.topics.map((topic, i) => (
-              <span
-                key={i}
-                className="text-xs px-3 py-1 rounded-full font-medium"
-                style={{ backgroundColor: "#e8f4fd", color: brandColors.primary }}
-              >
-                {topic}
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* Interactive Topics */}
+        <InteractiveTopics
+          detectedTopics={person.topics || []}
+          addedTopics={addedTopics}
+          removedTopics={removedTopics}
+          addTopic={addTopic}
+          removeTopic={removeTopic}
+          computeTopics={computeTopics}
+        />
 
         {/* Contact History */}
         <div className="bg-white rounded-2xl p-4 shadow-sm">
@@ -387,6 +896,13 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
             ))}
           </div>
         </div>
+
+        {/* Reach Your Goal */}
+        <ReachYourGoal
+          person={person}
+          targetHealth={targetHealth}
+          setTargetHealth={setTargetHealth}
+        />
 
         {/* AI Suggestions */}
         {person.aiSuggestions?.length > 0 && (
@@ -617,88 +1133,14 @@ const CatchUpDashboard = () => {
       {/* Relationships List */}
       <div className="px-6 py-4 space-y-3">
         {filteredRelationships.map((person) => (
-          <div
+          <ContactCard
             key={person.id}
-            className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-                  style={{ backgroundColor: getStatusColor(person.status) }}
-                >
-                  {person.avatar}
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => openDetailView(person)}
-                      className="font-semibold text-gray-900 hover:underline text-left"
-                      style={{ color: brandColors.darkBlue }}
-                    >
-                      {person.name}
-                    </button>
-                    {getStatusIcon(person.status)}
-                  </div>
-                  <p className="text-sm text-gray-500">{person.relationship}</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span className="text-xs text-gray-400">Last: {person.lastContact}</span>
-                    <span className="text-xs text-gray-400">•</span>
-                    <span className="text-xs text-gray-400">Next: {person.nextSuggested}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-right flex-shrink-0">
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-xs text-gray-500">Health</span>
-                  <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full transition-all duration-500 rounded-full"
-                      style={{ width: `${person.healthScore}%`, backgroundColor: getStatusColor(person.status) }}
-                    />
-                  </div>
-                  <span className="text-xs font-medium" style={{ color: getStatusColor(person.status) }}>
-                    {person.healthScore}%
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-2 justify-end">
-                  <button
-                    onClick={() => openAnalyticsPanel(person)}
-                    className="p-2 rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105"
-                    style={{ color: brandColors.primary }}
-                    title="Analytics"
-                  >
-                    <BarChart3 size={14} />
-                  </button>
-                  <button
-                    onClick={() => openAIPanel(person)}
-                    className="p-2 rounded-lg transition-all duration-200 hover:bg-purple-50 hover:scale-105"
-                    style={{ color: brandColors.primary }}
-                    title="AI Suggestions"
-                  >
-                    <Sparkles size={14} />
-                  </button>
-                  <button
-                    onClick={() => openContactPanel(person)}
-                    className="p-2 rounded-lg transition-colors duration-200 hover:bg-blue-50"
-                    style={{ color: brandColors.primary }}
-                    title="Smart Contact"
-                  >
-                    <Zap size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {person.notes && (
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <p className="text-sm text-gray-600 italic">"{person.notes}"</p>
-              </div>
-            )}
-          </div>
+            person={person}
+            onOpenDetail={openDetailView}
+            onOpenAnalytics={openAnalyticsPanel}
+            onOpenAI={openAIPanel}
+            onOpenContact={openContactPanel}
+          />
         ))}
       </div>
 
@@ -1039,6 +1481,94 @@ const CatchUpDashboard = () => {
           animation: slide-up 0.3s ease-out;
         }
       `}</style>
+    </div>
+  );
+};
+
+// ─── ContactCard (extracted so it can use useContactPrefs) ───────────────────
+const ContactCard = ({ person, onOpenDetail, onOpenAnalytics, onOpenAI, onOpenContact }) => {
+  const { relationship } = useContactPrefs(String(person.id));
+  const displayRelationship = relationship || person.relationship;
+
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+            style={{ backgroundColor: getStatusColor(person.status) }}
+          >
+            {person.avatar}
+          </div>
+
+          <div className="flex-1">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => onOpenDetail(person)}
+                className="font-semibold text-gray-900 hover:underline text-left"
+                style={{ color: brandColors.darkBlue }}
+              >
+                {person.name}
+              </button>
+              {getStatusIcon(person.status)}
+            </div>
+            <p className="text-sm text-gray-500">{displayRelationship}</p>
+            <div className="flex items-center space-x-2 mt-1">
+              <span className="text-xs text-gray-400">Last: {person.lastContact}</span>
+              <span className="text-xs text-gray-400">•</span>
+              <span className="text-xs text-gray-400">Next: {person.nextSuggested}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-right flex-shrink-0">
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="text-xs text-gray-500">Health</span>
+            <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full transition-all duration-500 rounded-full"
+                style={{ width: `${person.healthScore}%`, backgroundColor: getStatusColor(person.status) }}
+              />
+            </div>
+            <span className="text-xs font-medium" style={{ color: getStatusColor(person.status) }}>
+              {person.healthScore}%
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-2 justify-end">
+            <button
+              onClick={() => onOpenAnalytics(person)}
+              className="p-2 rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105"
+              style={{ color: brandColors.primary }}
+              title="Analytics"
+            >
+              <BarChart3 size={14} />
+            </button>
+            <button
+              onClick={() => onOpenAI(person)}
+              className="p-2 rounded-lg transition-all duration-200 hover:bg-purple-50 hover:scale-105"
+              style={{ color: brandColors.primary }}
+              title="AI Suggestions"
+            >
+              <Sparkles size={14} />
+            </button>
+            <button
+              onClick={() => onOpenContact(person)}
+              className="p-2 rounded-lg transition-colors duration-200 hover:bg-blue-50"
+              style={{ color: brandColors.primary }}
+              title="Smart Contact"
+            >
+              <Zap size={14} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {person.notes && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-sm text-gray-600 italic">"{person.notes}"</p>
+        </div>
+      )}
     </div>
   );
 };

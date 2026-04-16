@@ -246,6 +246,73 @@ function fetchGroupChats(abDb) {
   }
 }
 
+// ── Topic extraction ──────────────────────────────────────────────────────────
+const TOPIC_KEYWORDS = {
+  "Work": ["work", "job", "office", "meeting", "boss", "client", "project", "deadline", "salary", "interview", "company", "business", "hire"],
+  "Family": ["mom", "dad", "sister", "brother", "family", "kids", "baby", "parent", "aunt", "uncle", "grandma", "grandpa", "birthday", "wedding"],
+  "Food & Dining": ["eat", "lunch", "dinner", "breakfast", "restaurant", "food", "cook", "recipe", "coffee", "brunch", "hungry", "meal", "drinks"],
+  "Sports": ["game", "play", "team", "score", "match", "gym", "workout", "training", "basketball", "football", "soccer", "fitness"],
+  "Travel": ["trip", "flight", "hotel", "vacation", "airport", "travel", "city", "visit", "driving", "road trip"],
+  "Entertainment": ["movie", "show", "netflix", "music", "concert", "book", "watch", "episode", "series", "album", "stream"],
+  "Health": ["doctor", "sick", "hospital", "medicine", "health", "diet", "sleep", "stress", "anxiety", "therapy", "wellness"],
+  "Finance": ["money", "pay", "bill", "rent", "invest", "budget", "cost", "expensive", "bank", "loan", "cash"],
+  "Tech": ["app", "code", "software", "computer", "phone", "update", "tech", "website", "device", "ai", "startup"],
+  "Relationships": ["dating", "girlfriend", "boyfriend", "partner", "love", "breakup", "married", "engaged", "single"],
+};
+
+function extractTopics(contactId, isGroup = false) {
+  const joinFilter = isGroup
+    ? `JOIN chat_message_join cmj ON cmj.message_id = m.ROWID
+       JOIN chat c ON c.ROWID = cmj.chat_id AND c.chat_identifier = '${contactId}'`
+    : `JOIN handle h ON h.ROWID = m.handle_id AND h.id = '${contactId}'
+       JOIN chat_message_join cmj ON cmj.message_id = m.ROWID
+       JOIN chat c ON c.ROWID = cmj.chat_id AND c.style = 45`;
+
+  const sql = `
+    SELECT substr(lower(m.text), 1, 500) as text
+    FROM message m
+    ${joinFilter}
+    WHERE m.item_type = 0
+      AND m.text IS NOT NULL
+      AND m.text != ''
+      AND length(trim(m.text)) > 3
+    ORDER BY m.date DESC
+    LIMIT 60
+  `;
+
+  const tmpFile = path.join(os.tmpdir(), `catchup_topics_${Date.now()}.sql`);
+  fs.writeFileSync(tmpFile, sql);
+  let rows = [];
+  try {
+    const out = execSync(`sqlite3 -json "${MESSAGES_DB}" < "${tmpFile}"`, {
+      shell: true, maxBuffer: 5 * 1024 * 1024,
+    }).toString().trim();
+    fs.unlinkSync(tmpFile);
+    rows = out ? JSON.parse(out) : [];
+  } catch (e) {
+    if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
+    return [];
+  }
+
+  const allText = rows.map((r) => r.text || "").join(" ");
+  const counts = {};
+  for (const [topic, keywords] of Object.entries(TOPIC_KEYWORDS)) {
+    let hits = 0;
+    for (const kw of keywords) {
+      // Count occurrences of keyword as word boundary
+      const re = new RegExp(`\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g");
+      const matches = allText.match(re);
+      if (matches) hits += matches.length;
+    }
+    if (hits > 0) counts[topic] = hits;
+  }
+
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([topic]) => topic);
+}
+
 // ── 3. Recent message snippets ────────────────────────────────────────────────
 function fetchRecentSnippets(contactId, isGroup = false) {
   const joinFilter = isGroup
@@ -340,7 +407,7 @@ function buildContactHistory(snippets) {
 }
 
 // ── 6. Shape a contact into app format ───────────────────────────────────────
-function shapeContact(row, snippets, now, isGroup = false, participants = []) {
+function shapeContact(row, snippets, now, isGroup = false, participants = [], topics = []) {
   const score = computeHealthScore(row);
   const name = row.name?.startsWith("+") || row.name?.startsWith("chat")
     ? isGroup ? `Group (${row.participant_count || "?"})` : `Unknown (…${row.contact_id.slice(-4)})`
@@ -373,7 +440,7 @@ function shapeContact(row, snippets, now, isGroup = false, participants = []) {
     email: "",
     bestTimeToContact: "—",
     mood: score > 70 ? "positive" : score > 40 ? "neutral" : "distant",
-    topics: [],
+    topics,
     recentContext: [],
     aiSuggestions: [],
     contactHistory: buildContactHistory(snippets),
@@ -404,7 +471,8 @@ async function main() {
 
   for (const row of individuals) {
     const snippets = fetchRecentSnippets(row.contact_id, false);
-    relationships.push(shapeContact(row, snippets, now, false, []));
+    const topics = extractTopics(row.contact_id, false);
+    relationships.push(shapeContact(row, snippets, now, false, [], topics));
   }
 
   // Group chats
@@ -414,7 +482,8 @@ async function main() {
   for (const row of groups) {
     const snippets = fetchRecentSnippets(row.contact_id, true);
     const participants = abDb ? fetchGroupParticipants(row.contact_id, abDb) : [];
-    relationships.push(shapeContact(row, snippets, now, true, participants));
+    const topics = extractTopics(row.contact_id, true);
+    relationships.push(shapeContact(row, snippets, now, true, participants, topics));
   }
 
   // Sort by last contact

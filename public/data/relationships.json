@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-04-16T10:39:36.948Z",
+  "generatedAt": "2026-04-16T10:52:00.868Z",
   "source": "iMessage",
   "relationships": [
     {
-      "id": "dvtg98u0wvm",
+      "id": "00l5s48t1n3hr",
       "name": "The babysitters club",
       "avatar": "TB",
       "phoneNumber": "",
@@ -26,7 +26,11 @@
       "email": "",
       "bestTimeToContact": "—",
       "mood": "positive",
-      "topics": [],
+      "topics": [
+        "Tech",
+        "Sports",
+        "Relationships"
+      ],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
@@ -111,7 +115,7 @@
       }
     },
     {
-      "id": "ytiwrxuma1a",
+      "id": "64wawm6i1vp",
       "name": "Yli Liriano",
       "avatar": "YL",
       "phoneNumber": "+19172920767",
@@ -130,7 +134,11 @@
       "email": "",
       "bestTimeToContact": "—",
       "mood": "positive",
-      "topics": [],
+      "topics": [
+        "Travel",
+        "Entertainment",
+        "Health"
+      ],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
@@ -215,7 +223,7 @@
       }
     },
     {
-      "id": "r7lzv9ljlbk",
+      "id": "2dmki5pqvx2",
       "name": "Charles Hamlin",
       "avatar": "CH",
       "phoneNumber": "+17186639699",
@@ -234,7 +242,11 @@
       "email": "",
       "bestTimeToContact": "—",
       "mood": "positive",
-      "topics": [],
+      "topics": [
+        "Work",
+        "Family",
+        "Health"
+      ],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
@@ -319,7 +331,7 @@
       }
     },
     {
-      "id": "sezg4eybgap",
+      "id": "9s73prtq4s",
       "name": "Janice Liriano",
       "avatar": "JL",
       "phoneNumber": "+353858738801",
@@ -409,7 +421,7 @@
       }
     },
     {
-      "id": "tef4w6isabd",
+      "id": "sgkzzixxi5d",
       "name": "Rizz Caraballo",
       "avatar": "RC",
       "phoneNumber": "+16469157602",
@@ -428,7 +440,11 @@
       "email": "",
       "bestTimeToContact": "—",
       "mood": "neutral",
-      "topics": [],
+      "topics": [
+        "Work",
+        "Health",
+        "Finance"
+      ],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
@@ -513,7 +529,7 @@
       }
     },
     {
-      "id": "qfrzrqza9cm",
+      "id": "z6syeyzie3j",
       "name": "Sandra Liriano",
       "avatar": "SL",
       "phoneNumber": "+19176232715",
@@ -574,7 +590,7 @@
       }
     },
     {
-      "id": "kuzu59gajzs",
+      "id": "drewtotuqe",
       "name": "Ashley Little",
       "avatar": "AL",
       "phoneNumber": "+14045508142",
@@ -635,7 +651,7 @@
       }
     },
     {
-      "id": "xnuvfcu5v6",
+      "id": "7uei9hpuv98",
       "name": "The Sandlot",
       "avatar": "TS",
       "phoneNumber": "",
