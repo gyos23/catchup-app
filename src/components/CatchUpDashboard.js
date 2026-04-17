@@ -235,8 +235,7 @@ function useContactPrefs(contactId) {
   // Keep in sync if contactId changes
   useEffect(() => {
     setPrefs(getPrefs(load()));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactId]);
+  }, [contactId]); // helpers are stable closures; contactId is the only dep
 
   function update(patch) {
     const all = load();
@@ -1387,7 +1386,7 @@ const CatchUpDashboard = () => {
     fetch("/data/relationships.json?t=" + Date.now())
       .then((r) => r.json())
       .then((data) => {
-        if (data.relationships?.length > 0) {
+        if (Array.isArray(data.relationships)) {
           setRelationships(data.relationships);
           setDataSource(data.source?.includes("Calls") ? "imessage+calls" : "imessage");
           setLastSynced(data.generatedAt || null);
@@ -1405,11 +1404,9 @@ const CatchUpDashboard = () => {
   }, [loadData]);
 
   // Read all contact prefs from localStorage (re-reads when prefsVersion bumps)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const contactPrefs = React.useMemo(() => {
     try { return JSON.parse(localStorage.getItem("catchup_prefs") || "{}"); }
     catch { return {}; }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefsVersion]);
   const [showAIPanel, setShowAIPanel] = useState(false);
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);

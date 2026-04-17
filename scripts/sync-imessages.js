@@ -119,6 +119,14 @@ function getNextSuggested(score, days_since, msgs_per_week) {
   return `In ${Math.round(dueIn / 7)} weeks`;
 }
 
+// Deterministic numeric ID from a string — avoids Math.random() which breaks
+// per-contact localStorage persistence (doNotTrack, tags, etc.) on every sync.
+function stableId(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = (Math.imul(h, 33) ^ str.charCodeAt(i)) >>> 0;
+  return h;
+}
+
 function initials(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase() || "?").join("");
 }
@@ -504,7 +512,7 @@ function shapeContact(row, snippets, calls, now, isGroup = false, participants =
   };
 
   return {
-    id: Math.random().toString(36).slice(2),
+    id: stableId((row.contact_id || "") + (isGroup ? "g" : "")),
     name,
     avatar: initials(name),
     phoneNumber: isGroup ? "" : row.contact_id,
