@@ -2,6 +2,7 @@
 // Complete React Application
 
 import React, { useState, useEffect, useRef } from "react";
+import { DesignA, DesignB, DesignC, DesignD } from "./HomeVariants";
 import {
   User,
   Phone,
@@ -22,9 +23,15 @@ import {
   Send,
   Zap,
   ChevronLeft,
+  ChevronDown,
   Mail,
   Target,
   Plus,
+  EyeOff,
+  Eye,
+  Info,
+  Shield,
+  Smartphone,
 } from "lucide-react";
 
 const brandColors = {
@@ -55,6 +62,16 @@ const ALL_TOPIC_CATEGORIES = [
   "Work", "Family", "Food & Dining", "Sports", "Travel",
   "Entertainment", "Health", "Finance", "Tech", "Relationships",
 ];
+
+// ─── Sort options ─────────────────────────────────────────────────────────────
+const SORT_OPTIONS = [
+  { key: "healthDesc", label: "Health: Best first" },
+  { key: "healthAsc",  label: "Health: Needs care" },
+  { key: "lastContact", label: "Last contacted" },
+  { key: "nameAz",     label: "Name A–Z" },
+  { key: "mostActive", label: "Most active" },
+];
+const SORT_LABEL = Object.fromEntries(SORT_OPTIONS.map(o => [o.key, o.label]));
 
 // ─── Sample Data (fallback) ──────────────────────────────────────────────────
 const SAMPLE_RELATIONSHIPS = [
@@ -210,7 +227,7 @@ function useContactPrefs(contactId) {
   }
 
   function getPrefs(all) {
-    return all[contactId] || { relationship: null, addedTopics: [], removedTopics: [], targetHealth: null };
+    return all[contactId] || { relationship: null, addedTopics: [], removedTopics: [], targetHealth: null, doNotTrack: false };
   }
 
   const [prefs, setPrefs] = useState(() => getPrefs(load()));
@@ -265,6 +282,10 @@ function useContactPrefs(contactId) {
     update({ targetHealth: value });
   }
 
+  function setDoNotTrack(value) {
+    update({ doNotTrack: value });
+  }
+
   // Compute effective topics: (detectedTopics - dismissed) + added
   function computeTopics(detectedTopics) {
     const removed = prefs.removedTopics || [];
@@ -284,6 +305,8 @@ function useContactPrefs(contactId) {
     computeTopics,
     targetHealth: prefs.targetHealth || null,
     setTargetHealth,
+    doNotTrack: prefs.doNotTrack || false,
+    setDoNotTrack,
   };
 }
 
@@ -394,11 +417,15 @@ const getPriorityColor = (priority) => {
 
 const getMediumIcon = (medium) => {
   switch (medium) {
-    case "Call": return <Phone size={13} />;
-    case "Text": return <MessageCircle size={13} />;
-    case "Email": return <Mail size={13} />;
-    case "F2F": return <User size={13} />;
-    default: return <Send size={13} />;
+    case "Call":
+    case "Phone Call":    return <Phone size={13} />;
+    case "Text":
+    case "iMessage":      return <MessageCircle size={13} />;
+    case "Email":         return <Mail size={13} />;
+    case "F2F":           return <User size={13} />;
+    case "FaceTime Audio":return <Phone size={13} />;
+    case "FaceTime Video":return <Zap size={13} />;
+    default:              return <Send size={13} />;
   }
 };
 
@@ -725,6 +752,304 @@ const ReachYourGoal = ({ person, targetHealth, setTargetHealth }) => {
   );
 };
 
+// ─── About View ──────────────────────────────────────────────────────────────
+const SciencePill = ({ text }) => (
+  <div className="mt-3 flex items-start space-x-2 pt-3 border-t border-gray-50">
+    <span className="text-xs flex-shrink-0 mt-0.5">🔬</span>
+    <p className="text-xs text-gray-400 leading-relaxed italic">{text}</p>
+  </div>
+);
+
+const AboutView = ({ onBack }) => {
+  const scoreComponents = [
+    {
+      label: "Recency",
+      max: 40,
+      color: brandColors.primary,
+      icon: "⏱️",
+      description: "How recently you last connected — by message, call, or FaceTime. The most recent contact wins, regardless of type.",
+      tiers: [
+        { pts: 40, text: "Today or yesterday" },
+        { pts: 35, text: "Within 3 days" },
+        { pts: 28, text: "Within a week" },
+        { pts: 20, text: "Within 2 weeks" },
+        { pts: 10, text: "Within a month" },
+        { pts: 5,  text: "Within 2 months" },
+        { pts: 2,  text: "More than 2 months ago" },
+      ],
+      science: "Roberts & Dunbar (2011, Personal Relationships) found that contact frequency is the primary predictor of emotional closeness — the less recently you've spoken, the more closeness decays. Recency gets the highest weight (40 pts) because it's the strongest single signal of an active relationship.",
+    },
+    {
+      label: "Frequency",
+      max: 30,
+      color: "#7c3aed",
+      icon: "📈",
+      description: "How often you exchange messages or calls on average per week, looking back 90 days.",
+      tiers: [
+        { pts: 30, text: "10+ times a week (daily)" },
+        { pts: 24, text: "5–9 times a week" },
+        { pts: 18, text: "2–4 times a week" },
+        { pts: 12, text: "About once a week" },
+        { pts: 6,  text: "A few times a month" },
+        { pts: 2,  text: "Rarely" },
+      ],
+      science: "Dunbar's layered network model (Sutcliffe et al., 2012, British Journal of Psychology) shows humans maintain ~5 \"support clique\" friends (needing weekly contact), ~15 \"sympathy group\" friends (monthly), and ~50 active friends (a few times a year). The frequency tiers here map directly to those layers. Separately, Hall (2018, Journal of Social and Personal Relationships) found it takes ~50 hours of interaction to form a casual friendship and ~200 hours for a best friend — consistent contact is how those hours accumulate.",
+    },
+    {
+      label: "Balance",
+      max: 20,
+      color: brandColors.warning,
+      icon: "🤝",
+      description: "Whether you're the one reaching out, not just responding. Healthy relationships flow both ways.",
+      tiers: [
+        { pts: 20, text: "You start 30%+ of conversations" },
+        { pts: 14, text: "You start 15–29%" },
+        { pts: 8,  text: "You start 5–14%" },
+        { pts: 3,  text: "Almost always them initiating" },
+      ],
+      science: "Equity theory (Adams, 1965) established that perceived imbalance in any relationship — including who does the reaching out — creates dissatisfaction over time. Relational maintenance research (Stafford & Canary, 1991, Communication Monographs) identifies mutual \"assurance\" and \"positivity\" behaviors — both of which require someone to initiate — as core to keeping relationships stable. You don't need perfect 50/50, but consistently being the passive party is a warning sign.",
+    },
+    {
+      label: "Trend",
+      max: 10,
+      color: "#059669",
+      icon: "📊",
+      description: "Whether the relationship is warming up or cooling down compared to last month.",
+      tiers: [
+        { pts: 10, text: "This month ≥ last month (stable or growing)" },
+        { pts: 5,  text: "Slightly less active than last month" },
+        { pts: 0,  text: "Significantly quieter than last month" },
+      ],
+      science: "Declining contact is an early warning of relationship dissolution. Dunbar's group studied temporal communication patterns in phone networks and found that the volume of calls between two people is a leading indicator of relationship strength — a consistent drop tends to precede the relationship going dormant. Trend gets the smallest weight (10 pts) because a single quiet month isn't alarming — but the direction matters.",
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-40 overflow-y-auto" style={{ backgroundColor: brandColors.background }}>
+      {/* Header */}
+      <div style={{ backgroundColor: brandColors.primary }}>
+        <div className="px-4 pt-10 pb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center space-x-1 text-white opacity-80 hover:opacity-100 mb-5 transition-opacity"
+          >
+            <ChevronLeft size={20} />
+            <span className="text-sm">Back</span>
+          </button>
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.2)" }}>
+              <Info size={20} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white">How CatchUp Works</h1>
+              <p className="text-blue-200 text-sm">Transparent · Science-informed · On-device</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 py-5 space-y-4">
+
+        {/* Science grounding card */}
+        <div className="rounded-2xl p-5 shadow-sm" style={{ backgroundColor: "#eff6ff", border: `1.5px solid ${brandColors.primary}30` }}>
+          <p className="text-sm font-semibold mb-2" style={{ color: brandColors.primary }}>🧠 Grounded in Relationship Science</p>
+          <p className="text-sm text-gray-700 leading-relaxed mb-3">
+            The scoring draws on three decades of research into how humans maintain social bonds. The short version: <strong>contact frequency and recency</strong> are the strongest predictors of perceived closeness, and relationships that aren't actively maintained decay — sometimes faster than we expect.
+          </p>
+          <div className="space-y-2">
+            {[
+              { who: "Robin Dunbar", role: "Oxford professor of evolutionary psychology", finding: "Humans have a hard cognitive limit of ~150 stable relationships, structured in layers — and each layer needs a specific contact frequency to stay active." },
+              { who: "Jeffrey Hall", role: "University of Kansas, 2018", finding: "Casual friendships require ~50 hours of interaction to form; close friendships ~90 hours; best friends 200+. Hours accumulate through consistent, repeated contact." },
+              { who: "Holt-Lunstad et al.", role: "Meta-analysis, PLOS Medicine 2010", finding: "Social relationships are among the strongest predictors of longevity — comparable to quitting smoking. Weak social ties increase mortality risk by ~29%." },
+            ].map((r) => (
+              <div key={r.who} className="flex items-start space-x-2 py-2 border-t border-blue-100 first:border-0 first:pt-0">
+                <span className="text-base flex-shrink-0 mt-0.5">📖</span>
+                <div>
+                  <p className="text-xs font-semibold text-gray-800">{r.who} <span className="font-normal text-gray-400">· {r.role}</span></p>
+                  <p className="text-xs text-gray-600 leading-relaxed mt-0.5">{r.finding}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Dunbar layers explainer */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm">
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Dunbar's Inner Circle</p>
+          <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+            Dunbar found that everyone's network naturally organises into layers by closeness — and each layer has an implied contact cadence to stay active. CatchUp is designed to help you maintain your innermost circles.
+          </p>
+          <div className="space-y-2">
+            {[
+              { layer: "~5 people",   label: "Support Clique",   cadence: "Weekly contact",      color: brandColors.primary,  desc: "Your go-to people. Know your problems. Would lend you money." },
+              { layer: "~15 people",  label: "Sympathy Group",   cadence: "Monthly contact",     color: "#7c3aed",            desc: "Close friends. You'd attend their wedding or funeral." },
+              { layer: "~50 people",  label: "Active Network",   cadence: "A few times a year",  color: brandColors.warning,  desc: "Good friends. You pick up where you left off." },
+              { layer: "~150 people", label: "Dunbar's Number",  cadence: "Occasional",          color: brandColors.secondary, desc: "The outer limit of stable social relationships." },
+            ].map((d) => (
+              <div key={d.layer} className="flex items-start space-x-3 py-2 border-b border-gray-50 last:border-0">
+                <div className="flex-shrink-0 w-16 text-center pt-0.5">
+                  <p className="text-xs font-bold" style={{ color: d.color }}>{d.layer}</p>
+                  <p className="text-xs text-gray-400 leading-tight">{d.cadence}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">{d.label}</p>
+                  <p className="text-xs text-gray-500">{d.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* The Health Score intro */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm">
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">The Health Score</p>
+          <p className="text-gray-700 text-sm leading-relaxed">
+            Every person gets a score from <strong>0 to 100</strong> based on four observable signals from your messages and calls. No guessing, no AI black box — just patterns from data you already have.
+          </p>
+          <div className="mt-4 flex rounded-full overflow-hidden h-4">
+            {[
+              { pct: 40, color: brandColors.primary },
+              { pct: 30, color: "#7c3aed" },
+              { pct: 20, color: brandColors.warning },
+              { pct: 10, color: "#059669" },
+            ].map((s, i) => (
+              <div key={i} style={{ width: `${s.pct}%`, backgroundColor: s.color }} />
+            ))}
+          </div>
+          <div className="flex mt-1.5">
+            {[
+              { label: "Recency", pts: 40, color: brandColors.primary },
+              { label: "Frequency", pts: 30, color: "#7c3aed" },
+              { label: "Balance", pts: 20, color: brandColors.warning },
+              { label: "Trend", pts: 10, color: "#059669" },
+            ].map((s) => (
+              <div key={s.label} className="text-center" style={{ width: `${s.pts}%` }}>
+                <p className="text-xs font-bold" style={{ color: s.color }}>{s.pts}</p>
+                <p className="text-gray-400 leading-tight" style={{ fontSize: "10px" }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Each component with science */}
+        {scoreComponents.map((c) => (
+          <div key={c.label} className="bg-white rounded-2xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <span className="text-xl">{c.icon}</span>
+                <span className="font-semibold text-gray-900">{c.label}</span>
+              </div>
+              <span className="text-sm font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: c.color }}>
+                up to {c.max} pts
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 mb-3 leading-relaxed">{c.description}</p>
+            <div className="space-y-1.5">
+              {c.tiers.map((t) => (
+                <div key={t.pts} className="flex items-center space-x-3">
+                  <div className="flex-1 h-2 rounded-full bg-gray-100 relative overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${(t.pts / c.max) * 100}%`, backgroundColor: c.color, opacity: 0.3 + 0.7 * (t.pts / c.max) }}
+                    />
+                  </div>
+                  <span className="text-xs font-semibold w-8 text-right flex-shrink-0" style={{ color: c.color }}>{t.pts}</span>
+                  <span className="text-xs text-gray-500 flex-shrink-0 w-44">{t.text}</span>
+                </div>
+              ))}
+            </div>
+            <SciencePill text={c.science} />
+          </div>
+        ))}
+
+        {/* Calls */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="text-xl">📞</span>
+            <span className="font-semibold text-gray-900">Why Calls Count More</span>
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed mb-3">
+            Each answered call counts as roughly <strong>3 messages</strong> in the score. This isn't arbitrary — richer communication channels do more bonding work per minute than text.
+          </p>
+          <div className="space-y-2 mb-3">
+            {[
+              { icon: "📹", label: "FaceTime Video", note: "Closest to in-person — facial cues, tone, laughter" },
+              { icon: "🎙️", label: "FaceTime Audio / Phone", note: "Tone of voice carries emotional nuance texts can't" },
+              { icon: "💬", label: "iMessage", note: "High volume, lower bonding depth per exchange" },
+            ].map((row) => (
+              <div key={row.label} className="flex items-center space-x-3 py-1.5 border-b border-gray-50 last:border-0">
+                <span className="text-lg flex-shrink-0">{row.icon}</span>
+                <div>
+                  <p className="text-sm font-medium text-gray-800">{row.label}</p>
+                  <p className="text-xs text-gray-400">{row.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <SciencePill text={"Vlahovic, Roberts & Dunbar (2012, Journal of Computer-Mediated Communication) found that voice calls produce more subjective feelings of closeness than text-based communication. Dunbar's broader research on \"social grooming\" suggests a hierarchy: face-to-face > voice > text, in terms of bonding effectiveness per unit of time."} />
+        </div>
+
+        {/* Status colors */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm">
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">What the Colors Mean</p>
+          <div className="space-y-3">
+            {[
+              { color: brandColors.primary, dot: "🟢", label: "Healthy  70–100", desc: "You're in consistent touch. This relationship is actively maintained." },
+              { color: brandColors.yellow,  dot: "🟡", label: "Needs Attention  40–69", desc: "It's been a while. A quick message can reset the clock significantly." },
+              { color: brandColors.red,     dot: "🔴", label: "Priority  below 40", desc: "This relationship is going dormant. The longer you wait, the harder it gets to restart." },
+            ].map((s) => (
+              <div key={s.label} className="flex items-start space-x-3">
+                <span className="text-lg flex-shrink-0">{s.dot}</span>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: s.color }}>{s.label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <SciencePill text="The 70/40 thresholds are design decisions, not published cutoffs. But the direction is grounded: Roberts & Dunbar (2011) found emotional closeness scores correlate strongly with contact frequency, and Dunbar's layer model implies different maintenance requirements for different relationship tiers." />
+        </div>
+
+        {/* Data sources */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center space-x-2 mb-3">
+            <Smartphone size={16} style={{ color: brandColors.primary }} />
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Data Sources</p>
+          </div>
+          <div className="space-y-1">
+            {[
+              { icon: "💬", label: "iMessage", desc: "Text and photo messages — last 90 days, individual and group chats." },
+              { icon: "📞", label: "Phone & FaceTime", desc: "Answered calls over 10 seconds — last 90 days. Type (phone/audio/video) is recorded." },
+              { icon: "👤", label: "Contacts", desc: "Used only to resolve phone numbers to names. Nothing is stored or transmitted." },
+            ].map((s) => (
+              <div key={s.label} className="flex items-start space-x-3 py-2.5 border-b border-gray-50 last:border-0">
+                <span className="text-xl flex-shrink-0 mt-0.5">{s.icon}</span>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">{s.label}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed mt-0.5">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Privacy */}
+        <div className="rounded-2xl p-5 shadow-sm" style={{ backgroundColor: "#f0fdf4", border: "1.5px solid #bbf7d0" }}>
+          <div className="flex items-center space-x-2 mb-2">
+            <Shield size={16} style={{ color: "#059669" }} />
+            <p className="text-sm font-semibold" style={{ color: "#059669" }}>100% On-Device</p>
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            All data stays on your Mac. CatchUp reads your local databases directly — nothing is uploaded, synced to a server, or shared with anyone. Your messages and calls never leave your device.
+          </p>
+        </div>
+
+        <div className="h-6" />
+      </div>
+    </div>
+  );
+};
+
 // ─── Detail View ─────────────────────────────────────────────────────────────
 const PersonDetailView = ({ person, onBack, onContact }) => {
   const maxContacts = Math.max(...person.analytics.contactFrequency.map(d => d.contacts), 1);
@@ -739,6 +1064,8 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
     computeTopics,
     targetHealth,
     setTargetHealth,
+    doNotTrack,
+    setDoNotTrack,
   } = useContactPrefs(String(person.id));
 
   return (
@@ -842,6 +1169,38 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
           </div>
         </div>
 
+        {/* Call Stats (if any) */}
+        {person.analytics?.callStats && (
+          person.analytics.callStats.phone > 0 ||
+          person.analytics.callStats.facetimeAudio > 0 ||
+          person.analytics.callStats.facetimeVideo > 0
+        ) && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <div className="flex items-center space-x-2 mb-3">
+              <Phone size={16} style={{ color: brandColors.primary }} />
+              <h2 className="font-semibold text-gray-900">Calls & FaceTime</h2>
+              <span className="text-xs text-gray-400 ml-auto">{person.analytics.callStats.totalMinutes} min total</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: "Phone", count: person.analytics.callStats.phone, icon: "📞" },
+                { label: "FT Audio", count: person.analytics.callStats.facetimeAudio, icon: "🎙️" },
+                { label: "FT Video", count: person.analytics.callStats.facetimeVideo, icon: "📹" },
+              ].map(({ label, count, icon }) => (
+                <div
+                  key={label}
+                  className="flex flex-col items-center p-2 rounded-xl"
+                  style={{ backgroundColor: count > 0 ? "#e8f4fd" : "#f9fafb" }}
+                >
+                  <span className="text-lg mb-0.5">{icon}</span>
+                  <span className="text-lg font-bold" style={{ color: count > 0 ? brandColors.primary : "#9ca3af" }}>{count}</span>
+                  <span className="text-xs text-gray-500">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Interactive Topics */}
         <InteractiveTopics
           detectedTopics={person.topics || []}
@@ -935,6 +1294,39 @@ const PersonDetailView = ({ person, onBack, onContact }) => {
           <p className="text-sm text-gray-600 ml-6">{person.bestTimeToContact}</p>
         </div>
 
+        {/* Do Not Track */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              {doNotTrack
+                ? <EyeOff size={18} style={{ color: brandColors.red }} />
+                : <Eye size={18} style={{ color: brandColors.secondary }} />
+              }
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Do Not Track</p>
+                <p className="text-xs text-gray-500">
+                  {doNotTrack ? "Hidden from your main list" : "Showing in your main list"}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setDoNotTrack(!doNotTrack)}
+              className="relative w-12 h-6 rounded-full transition-colors duration-300 flex-shrink-0"
+              style={{ backgroundColor: doNotTrack ? brandColors.red : "#d1d5db" }}
+            >
+              <span
+                className="absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all duration-300"
+                style={{ left: doNotTrack ? "calc(100% - 20px)" : "4px" }}
+              />
+            </button>
+          </div>
+          {doNotTrack && (
+            <p className="text-xs text-gray-400 mt-3 ml-9">
+              You can restore this contact from the "Hidden" view on the main screen.
+            </p>
+          )}
+        </div>
+
         {/* Spacer for action bar */}
         <div className="h-20" />
       </div>
@@ -976,24 +1368,49 @@ const CatchUpDashboard = () => {
   const [dataSource, setDataSource] = useState("sample");
   const [syncing, setSyncing] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [filterType, setFilterType] = useState("all"); // "all" | "individual" | "group"
+  const [sortBy, setSortBy] = useState("healthDesc");
+  const [showSortMenu, setShowSortMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showHidden, setShowHidden] = useState(false);
+  const [prefsVersion, setPrefsVersion] = useState(0);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [showDetailView, setShowDetailView] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [lastSynced, setLastSynced] = useState(null);
+  const [designVariant, setDesignVariant] = useState(() =>
+    localStorage.getItem("catchup_design") || "D"
+  );
 
-  // Try to load live iMessage data on mount
-  useEffect(() => {
-    fetch("/data/relationships.json")
+  // Load data and set up auto-refresh every 30 minutes
+  const loadData = React.useCallback((silent = false) => {
+    fetch("/data/relationships.json?t=" + Date.now())
       .then((r) => r.json())
       .then((data) => {
         if (data.relationships?.length > 0) {
           setRelationships(data.relationships);
-          setDataSource("imessage");
+          setDataSource(data.source?.includes("Calls") ? "imessage+calls" : "imessage");
+          setLastSynced(data.generatedAt || null);
         }
       })
       .catch(() => {
-        // Fall back to sample data silently
+        if (!silent) {/* Fall back to sample data silently */}
       });
   }, []);
+
+  useEffect(() => {
+    loadData(false);
+    const interval = setInterval(() => loadData(true), 30 * 60 * 1000); // every 30 min
+    return () => clearInterval(interval);
+  }, [loadData]);
+
+  // Read all contact prefs from localStorage (re-reads when prefsVersion bumps)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const contactPrefs = React.useMemo(() => {
+    try { return JSON.parse(localStorage.getItem("catchup_prefs") || "{}"); }
+    catch { return {}; }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefsVersion]);
   const [showAIPanel, setShowAIPanel] = useState(false);
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);
   const [showContactPanel, setShowContactPanel] = useState(false);
@@ -1045,27 +1462,119 @@ const CatchUpDashboard = () => {
     setShowContactPanel(false);
   };
 
-  const filteredRelationships = relationships.filter((person) => {
-    const matchesFilter = filterStatus === "all" || person.status === filterStatus;
-    const matchesSearch = person.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  // Separate tracked vs hidden
+  const trackedRelationships = relationships.filter(r => !(contactPrefs[String(r.id)]?.doNotTrack));
+  const hiddenRelationships  = relationships.filter(r =>   contactPrefs[String(r.id)]?.doNotTrack);
+  const hiddenCount = hiddenRelationships.length;
+
+  const sourceList = showHidden ? hiddenRelationships : trackedRelationships;
+
+  const sortedAndFiltered = [...sourceList]
+    .filter((person) => {
+      const matchesStatus = filterStatus === "all" || person.status === filterStatus;
+      const matchesSearch = person.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesType =
+        filterType === "all" ||
+        (filterType === "individual" && !person.isGroup) ||
+        (filterType === "group" && person.isGroup);
+      return matchesStatus && matchesSearch && matchesType;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "healthAsc":   return a.healthScore - b.healthScore;
+        case "lastContact":
+          return new Date(a.lastContactDate || 0) - new Date(b.lastContactDate || 0);
+        case "nameAz":      return a.name.localeCompare(b.name);
+        case "mostActive":  return (b.analytics?.totalContacts || 0) - (a.analytics?.totalContacts || 0);
+        case "healthDesc":
+        default:            return b.healthScore - a.healthScore;
+      }
+    });
+
+  const filteredRelationships = sortedAndFiltered;
 
   const statusCounts = {
-    all: relationships.length,
-    green: relationships.filter((r) => r.status === "green").length,
-    yellow: relationships.filter((r) => r.status === "yellow").length,
-    red: relationships.filter((r) => r.status === "red").length,
+    all: trackedRelationships.length,
+    green: trackedRelationships.filter((r) => r.status === "green").length,
+    yellow: trackedRelationships.filter((r) => r.status === "yellow").length,
+    red: trackedRelationships.filter((r) => r.status === "red").length,
   };
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: brandColors.background }}>
 
+      {/* About View */}
+      {showAbout && <AboutView onBack={() => setShowAbout(false)} />}
+
+      {/* ── Design switcher pill (floats above everything) ── */}
+      <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
+           style={{ pointerEvents: "auto" }}>
+        <div className="flex items-center space-x-1 rounded-full px-2 py-1.5 shadow-2xl"
+             style={{ backgroundColor: "rgba(12,35,64,0.92)", backdropFilter: "blur(12px)" }}>
+          {[
+            { key: "D",        label: "✦ Focus" },
+            { key: "original", label: "Classic" },
+            { key: "A",        label: "Coach" },
+            { key: "B",        label: "Orbit" },
+            { key: "C",        label: "Pulse" },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => { setDesignVariant(key); localStorage.setItem("catchup_design", key); }}
+              className="px-3 py-1 rounded-full text-xs font-semibold transition-all"
+              style={{
+                backgroundColor: designVariant === key ? "#0969b8" : "transparent",
+                color: designVariant === key ? "#fff" : "rgba(255,255,255,0.5)",
+              }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Variant screens */}
+      {designVariant === "D" && !showDetailView && !showAbout && (
+        <DesignD
+          relationships={filteredRelationships.length ? filteredRelationships : relationships}
+          onOpenDetail={openDetailView}
+          onOpenContact={openContactPanel}
+          dataSource={dataSource}
+          lastSynced={lastSynced}
+        />
+      )}
+      {designVariant === "A" && !showDetailView && !showAbout && (
+        <DesignA
+          relationships={filteredRelationships.length ? filteredRelationships : relationships}
+          onOpenDetail={openDetailView}
+          onOpenContact={openContactPanel}
+          dataSource={dataSource}
+          lastSynced={lastSynced}
+        />
+      )}
+      {designVariant === "B" && !showDetailView && !showAbout && (
+        <DesignB
+          relationships={filteredRelationships.length ? filteredRelationships : relationships}
+          onOpenDetail={openDetailView}
+          onOpenContact={openContactPanel}
+          dataSource={dataSource}
+          lastSynced={lastSynced}
+        />
+      )}
+      {designVariant === "C" && !showDetailView && !showAbout && (
+        <DesignC
+          relationships={filteredRelationships.length ? filteredRelationships : relationships}
+          onOpenDetail={openDetailView}
+          onOpenContact={openContactPanel}
+          dataSource={dataSource}
+          lastSynced={lastSynced}
+        />
+      )}
+
       {/* Detail View (full-screen slide-in) */}
       {showDetailView && selectedPerson && (
         <PersonDetailView
           person={selectedPerson}
-          onBack={() => setShowDetailView(false)}
+          onBack={() => { setShowDetailView(false); setPrefsVersion(v => v + 1); }}
           onContact={(person, method) => {
             setShowDetailView(false);
             openContactPanel(person);
@@ -1074,12 +1583,23 @@ const CatchUpDashboard = () => {
         />
       )}
 
-      {/* Header */}
-      <div className="px-6 py-8" style={{ backgroundColor: brandColors.primary }}>
+      {/* ── Original design (shown when designVariant === "original") ── */}
+      {designVariant === "original" && <>
+
+      {/* Header — extra top padding for iOS notch/Dynamic Island in standalone PWA mode */}
+      <div className="px-6 pb-8" style={{ backgroundColor: brandColors.primary, paddingTop: "max(2rem, env(safe-area-inset-top, 2rem))" }}>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
             <Heart className="text-white" size={28} />
             <h1 className="text-2xl font-bold text-white">CatchUp</h1>
+            <button
+              onClick={() => setShowAbout(true)}
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-all hover:bg-white hover:bg-opacity-20"
+              style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+              title="How it works"
+            >
+              <Info size={14} className="text-white" />
+            </button>
           </div>
           <div className="text-right">
             <p className="text-blue-100 text-sm">Your Relationship Health</p>
@@ -1087,8 +1607,20 @@ const CatchUpDashboard = () => {
               {Math.round(relationships.reduce((acc, r) => acc + r.healthScore, 0) / relationships.length)}%
             </p>
             <p className="text-blue-200 text-xs mt-0.5">
-              {dataSource === "imessage" ? "📱 Live iMessage data" : "📋 Sample data"}
+              {dataSource === "imessage+calls"
+                ? "📱 iMessage + Calls"
+                : dataSource === "imessage"
+                ? "📱 Live iMessage data"
+                : "📋 Sample data"}
             </p>
+            {lastSynced && (
+              <p className="text-blue-300 text-xs mt-0.5 opacity-70">
+                Synced {(() => {
+                  const mins = Math.round((Date.now() - new Date(lastSynced).getTime()) / 60000);
+                  return mins < 1 ? "just now" : mins < 60 ? `${mins}m ago` : `${Math.round(mins / 60)}h ago`;
+                })()}
+              </p>
+            )}
           </div>
         </div>
 
@@ -1130,19 +1662,116 @@ const CatchUpDashboard = () => {
         </div>
       </div>
 
-      {/* Relationships List */}
-      <div className="px-6 py-4 space-y-3">
-        {filteredRelationships.map((person) => (
-          <ContactCard
-            key={person.id}
-            person={person}
-            onOpenDetail={openDetailView}
-            onOpenAnalytics={openAnalyticsPanel}
-            onOpenAI={openAIPanel}
-            onOpenContact={openContactPanel}
-          />
-        ))}
+      {/* Sort & Filter Bar */}
+      <div className="bg-white border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+        {/* Sort dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setShowSortMenu(!showSortMenu)}
+            className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all"
+            style={{
+              borderColor: sortBy !== "healthDesc" ? brandColors.primary : "#e0e0e0",
+              color: sortBy !== "healthDesc" ? brandColors.primary : brandColors.secondary,
+              backgroundColor: sortBy !== "healthDesc" ? "#e8f4fd" : "transparent",
+            }}
+          >
+            <span>{SORT_LABEL[sortBy]}</span>
+            <ChevronDown size={12} />
+          </button>
+          {showSortMenu && (
+            <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-lg border border-gray-100 z-20 overflow-hidden" style={{ minWidth: "180px" }}>
+              {SORT_OPTIONS.map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => { setSortBy(key); setShowSortMenu(false); }}
+                  className="w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 transition-colors flex items-center justify-between"
+                  style={{ color: sortBy === key ? brandColors.primary : "#374151", fontWeight: sortBy === key ? "600" : "400" }}
+                >
+                  <span>{label}</span>
+                  {sortBy === key && <CheckCircle size={12} style={{ color: brandColors.primary }} />}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Type filter pills */}
+        <div className="flex items-center space-x-1">
+          {[
+            { key: "all",        label: "All" },
+            { key: "individual", label: "People" },
+            { key: "group",      label: "Groups" },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setFilterType(key)}
+              className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+              style={{
+                backgroundColor: filterType === key ? brandColors.primary : "#f4f4f3",
+                color: filterType === key ? "#ffffff" : brandColors.secondary,
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Relationships List */}
+      {/* Overlay to close sort menu when clicking elsewhere */}
+      {showSortMenu && (
+        <div className="fixed inset-0 z-10" onClick={() => setShowSortMenu(false)} />
+      )}
+
+      {showHidden && (
+        <div className="mx-6 mt-4 mb-1 flex items-center space-x-2 p-3 rounded-xl" style={{ backgroundColor: "#fff3f3", border: `1.5px solid ${brandColors.red}20` }}>
+          <EyeOff size={14} style={{ color: brandColors.red }} />
+          <p className="text-xs font-medium flex-1" style={{ color: brandColors.red }}>
+            Showing {hiddenCount} Do Not Track contact{hiddenCount !== 1 ? "s" : ""}
+          </p>
+          <button
+            onClick={() => { setShowHidden(false); setFilterStatus("all"); setFilterType("all"); }}
+            className="text-xs font-semibold"
+            style={{ color: brandColors.red }}
+          >
+            Back to list
+          </button>
+        </div>
+      )}
+
+      <div className="px-6 py-4 space-y-3">
+        {filteredRelationships.length === 0 ? (
+          <div className="text-center py-10 text-gray-400">
+            <p className="text-sm">No contacts match your filters.</p>
+          </div>
+        ) : (
+          filteredRelationships.map((person) => (
+            <ContactCard
+              key={person.id}
+              person={person}
+              onOpenDetail={openDetailView}
+              onOpenAnalytics={openAnalyticsPanel}
+              onOpenAI={openAIPanel}
+              onOpenContact={openContactPanel}
+            />
+          ))
+        )}
+      </div>
+
+      {/* Hidden contacts footer */}
+      {!showHidden && hiddenCount > 0 && (
+        <div className="text-center pb-6">
+          <button
+            onClick={() => setShowHidden(true)}
+            className="inline-flex items-center space-x-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors py-2 px-4 rounded-full hover:bg-gray-100"
+          >
+            <EyeOff size={12} />
+            <span>{hiddenCount} hidden contact{hiddenCount !== 1 ? "s" : ""}</span>
+          </button>
+        </div>
+      )}
+
+      </> /* end original design */}
 
       {/* Smart Contact Panel */}
       {showContactPanel && selectedPerson && (

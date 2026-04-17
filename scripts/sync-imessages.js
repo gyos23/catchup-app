@@ -12,8 +12,12 @@ const os = require("os");
 
 // ── Paths ─────────────────────────────────────────────────────────────────────
 const MESSAGES_DB = path.join(os.homedir(), "Library/Messages/chat.db");
+const CALL_HISTORY_DB = path.join(os.homedir(), "Library/Application Support/CallHistoryDB/CallHistory.storedata");
 const LOOKBACK_DAYS = 90;
 const LOOKBACK_SEC = LOOKBACK_DAYS * 86400;
+
+// ZCALLTYPE codes
+const CALL_MEDIUM = { 1: "Phone Call", 8: "FaceTime Audio", 16: "FaceTime Video" };
 
 function findAddressBook() {
   const sourcesDir = path.join(
@@ -60,19 +64,29 @@ const normalizeExpr = (col) =>
   `substr(replace(replace(replace(replace(replace(replace(${col},'+',''),'-',''),' ',''),'(',''),')',''),'.',''), -10)`;
 
 // ── Health score ──────────────────────────────────────────────────────────────
-function computeHealthScore({ days_since, msgs_per_week, from_me, total_msgs, this_month, last_month }) {
-  // Recency (0-40)
+function computeHealthScore({ days_since, msgs_per_week, from_me, total_msgs, this_month, last_month, call_stats = {} }) {
+  const { answered_calls = 0, call_mins = 0, days_since_call = 9999 } = call_stats;
+
+  // Each answered call with >30s counts as 3 message-equivalents (capped at 15)
+  const call_equiv = Math.min(answered_calls * 3, 15);
+  const eff_days = Math.min(days_since, days_since_call);
+  const eff_mpw  = msgs_per_week + (call_equiv / (LOOKBACK_DAYS / 7.0));
+
+  // Recency (0-40) — use most recent contact of any kind
   const recency =
-    days_since <= 1 ? 40 : days_since <= 3 ? 35 : days_since <= 7 ? 28
-    : days_since <= 14 ? 20 : days_since <= 30 ? 10 : days_since <= 60 ? 5 : 2;
+    eff_days <= 1 ? 40 : eff_days <= 3 ? 35 : eff_days <= 7 ? 28
+    : eff_days <= 14 ? 20 : eff_days <= 30 ? 10 : eff_days <= 60 ? 5 : 2;
 
   // Frequency (0-30)
   const freq =
-    msgs_per_week >= 10 ? 30 : msgs_per_week >= 5 ? 24 : msgs_per_week >= 2 ? 18
-    : msgs_per_week >= 1 ? 12 : msgs_per_week >= 0.5 ? 6 : 2;
+    eff_mpw >= 10 ? 30 : eff_mpw >= 5 ? 24 : eff_mpw >= 2 ? 18
+    : eff_mpw >= 1 ? 12 : eff_mpw >= 0.5 ? 6 : 2;
 
   // Initiation balance (0-20) — do YOU reach out too?
-  const ratio = total_msgs > 0 ? from_me / total_msgs : 0;
+  const outgoing_calls = call_stats.outgoing_calls || 0;
+  const eff_from_me = from_me + outgoing_calls * 3;
+  const eff_total   = total_msgs + call_equiv;
+  const ratio = eff_total > 0 ? eff_from_me / eff_total : 0;
   const balance = ratio >= 0.3 ? 20 : ratio >= 0.15 ? 14 : ratio >= 0.05 ? 8 : 3;
 
   // Trend (0-10) — is activity stable/growing?
@@ -390,25 +404,94 @@ function fetchGroupParticipants(chatIdentifier, abDb) {
   }
 }
 
-// ── 5. Build contact history from snippets ────────────────────────────────────
-function buildContactHistory(snippets) {
-  return snippets.map((s) => {
-    const date = new Date(s.date);
-    const now = new Date();
-    const diffDays = Math.round((now - date) / 86400000);
-    return {
-      date: formatDaysAgo(diffDays),
-      medium: "iMessage",
-      subject: "—",
-      initiatedBy: s.is_from_me ? "me" : "them",
-      summary: s.text?.replace(/[^\x20-\x7E]/g, "").trim().slice(0, 100) || "(attachment)",
-    };
-  });
+// ── 5. Call history from CallHistoryDB ───────────────────────────────────────
+function fetchCallsForContact(phoneNumber) {
+  if (!phoneNumber || phoneNumber.startsWith("chat")) return [];
+  const norm = phoneNumber.replace(/\D/g, "").slice(-10);
+  if (!norm || norm.length < 7) return [];
+
+  const normSql = (col) =>
+    `substr(replace(replace(replace(replace(replace(replace(${col},'+',''),'-',''),' ',''),'(',''),')',''),'.',''), -10)`;
+
+  const sql = `
+    SELECT
+      ZCALLTYPE   as call_type,
+      ZANSWERED   as answered,
+      ZORIGINATED as originated,
+      CAST(ROUND(ZDURATION,0) AS INTEGER) as duration,
+      ZADDRESS    as address,
+      datetime(ZDATE+978307200,'unixepoch','localtime') as call_date
+    FROM ZCALLRECORD
+    WHERE ${normSql("ZADDRESS")} = '${norm}'
+      AND ZDATE > (strftime('%s','now') - 978307200 - ${LOOKBACK_SEC})
+    ORDER BY ZDATE DESC
+    LIMIT 50
+  `;
+  const tmpFile = path.join(os.tmpdir(), `catchup_calls_${Date.now()}.sql`);
+  fs.writeFileSync(tmpFile, sql);
+  try {
+    const out = execSync(`sqlite3 -json "${CALL_HISTORY_DB}" < "${tmpFile}"`, {
+      shell: true, maxBuffer: 2 * 1024 * 1024,
+    }).toString().trim();
+    fs.unlinkSync(tmpFile);
+    return out ? JSON.parse(out) : [];
+  } catch {
+    if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
+    return [];
+  }
 }
 
-// ── 6. Shape a contact into app format ───────────────────────────────────────
-function shapeContact(row, snippets, now, isGroup = false, participants = [], topics = []) {
-  const score = computeHealthScore(row);
+function buildCallStats(calls) {
+  const answered = calls.filter(c => c.answered && c.duration > 30);
+  const now = new Date();
+  const daysSinceCall = calls.length > 0
+    ? Math.round((now - new Date(calls[0].call_date)) / 86400000)
+    : 9999;
+  return {
+    answered_calls:  answered.length,
+    outgoing_calls:  answered.filter(c => c.originated).length,
+    call_mins:       Math.round(answered.reduce((s, c) => s + c.duration, 0) / 60),
+    days_since_call: daysSinceCall,
+    phone:           answered.filter(c => c.call_type === 1).length,
+    facetimeAudio:   answered.filter(c => c.call_type === 8).length,
+    facetimeVideo:   answered.filter(c => c.call_type === 16).length,
+  };
+}
+
+// ── 6. Build contact history from snippets + calls ────────────────────────────
+function buildContactHistory(snippets, calls = []) {
+  const now = new Date();
+
+  const msgHistory = snippets.map((s) => ({
+    _ts: new Date(s.date).getTime(),
+    date: formatDaysAgo(Math.round((now - new Date(s.date)) / 86400000)),
+    medium: "iMessage",
+    subject: "—",
+    initiatedBy: s.is_from_me ? "me" : "them",
+    summary: s.text?.replace(/[^\x20-\x7E]/g, "").trim().slice(0, 100) || "(attachment)",
+  }));
+
+  const callHistory = calls
+    .filter(c => c.answered && c.duration > 10)
+    .map((c) => ({
+      _ts: new Date(c.call_date).getTime(),
+      date: formatDaysAgo(Math.round((now - new Date(c.call_date)) / 86400000)),
+      medium: CALL_MEDIUM[c.call_type] || "Phone Call",
+      subject: "—",
+      initiatedBy: c.originated ? "me" : "them",
+      summary: `${CALL_MEDIUM[c.call_type] || "Call"} · ${Math.round(c.duration / 60)} min`,
+    }));
+
+  return [...msgHistory, ...callHistory]
+    .sort((a, b) => b._ts - a._ts)
+    .slice(0, 8)
+    .map(({ _ts, ...rest }) => rest);
+}
+
+// ── 7. Shape a contact into app format ───────────────────────────────────────
+function shapeContact(row, snippets, calls, now, isGroup = false, participants = [], topics = []) {
+  const call_stats = isGroup ? {} : buildCallStats(calls);
+  const score = computeHealthScore({ ...row, call_stats });
   const name = row.name?.startsWith("+") || row.name?.startsWith("chat")
     ? isGroup ? `Group (${row.participant_count || "?"})` : `Unknown (…${row.contact_id.slice(-4)})`
     : row.name;
@@ -443,7 +526,7 @@ function shapeContact(row, snippets, now, isGroup = false, participants = [], to
     topics,
     recentContext: [],
     aiSuggestions: [],
-    contactHistory: buildContactHistory(snippets),
+    contactHistory: buildContactHistory(snippets, isGroup ? [] : calls),
     analytics: {
       totalContacts: row.total_msgs,
       avgResponseTime: "—",
@@ -451,6 +534,12 @@ function shapeContact(row, snippets, now, isGroup = false, participants = [], to
       methodBreakdown,
       responsiveness: Math.round((row.from_them / Math.max(row.total_msgs, 1)) * 100),
       initiationRatio: { me: row.from_me, them: row.from_them },
+      callStats: isGroup ? null : {
+        phone: call_stats.phone || 0,
+        facetimeAudio: call_stats.facetimeAudio || 0,
+        facetimeVideo: call_stats.facetimeVideo || 0,
+        totalMinutes: call_stats.call_mins || 0,
+      },
     },
   };
 }
@@ -469,10 +558,14 @@ async function main() {
   const individuals = fetchIndividualContacts(abDb);
   console.log(`✅ ${individuals.length} individual contacts`);
 
+  const callDbExists = fs.existsSync(CALL_HISTORY_DB);
+  console.log(callDbExists ? "✅ CallHistoryDB found — tracking calls & FaceTime" : "⚠️  No CallHistoryDB — call data skipped");
+
   for (const row of individuals) {
     const snippets = fetchRecentSnippets(row.contact_id, false);
-    const topics = extractTopics(row.contact_id, false);
-    relationships.push(shapeContact(row, snippets, now, false, [], topics));
+    const calls    = callDbExists ? fetchCallsForContact(row.contact_id) : [];
+    const topics   = extractTopics(row.contact_id, false);
+    relationships.push(shapeContact(row, snippets, calls, now, false, [], topics));
   }
 
   // Group chats
@@ -483,7 +576,7 @@ async function main() {
     const snippets = fetchRecentSnippets(row.contact_id, true);
     const participants = abDb ? fetchGroupParticipants(row.contact_id, abDb) : [];
     const topics = extractTopics(row.contact_id, true);
-    relationships.push(shapeContact(row, snippets, now, true, participants, topics));
+    relationships.push(shapeContact(row, snippets, [], now, true, participants, topics));
   }
 
   // Sort by last contact
@@ -491,7 +584,7 @@ async function main() {
 
   const out = {
     generatedAt: new Date().toISOString(),
-    source: "iMessage",
+    source: callDbExists ? "iMessage+Calls" : "iMessage",
     relationships,
   };
 
