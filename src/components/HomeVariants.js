@@ -343,7 +343,7 @@ function AnimatedRing({ score, size = 44, strokeWidth = 3.5, delay = 0, dark = f
   useEffect(() => {
     const t = setTimeout(() => setFilled(true), delay);
     return () => clearTimeout(t);
-  }, [delay]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [delay]);
 
   const r    = (size - strokeWidth * 2) / 2;
   const circ = 2 * Math.PI * r;
@@ -428,10 +428,10 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
             </span>
           </div>
 
-          {/* Tribe health ring + number */}
+          {/* Tribe health ring + number — fix 3: 40px / 3.5px stroke */}
           <div className="flex items-center space-x-2">
-            <div style={{ width: 32, height: 32 }}>
-              <AnimatedRing score={avgHealth} size={32} strokeWidth={3} delay={700} />
+            <div style={{ width: 40, height: 40 }}>
+              <AnimatedRing score={avgHealth} size={40} strokeWidth={3.5} delay={700} />
             </div>
             <div className="text-right leading-none">
               <p
@@ -449,35 +449,38 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
         </div>
       </div>
 
-      {/* ── Hero card ───────────────────────────────────────────────────────── */}
-      {hero && (
-        <div className="mx-4 mt-4">
+      {/* ── Hero card (fix 1: breathing room, fix 2: empty state, fix 5: gradient) ── */}
+      <div className="mx-4 mt-4">
+        {hero && (priority.length > 0 || attention.length > 0 || hero.status !== "green") ? (
+          /* Urgent contact — "Your move today" */
           <div
             className="rounded-2xl overflow-hidden"
             style={{
-              background: "linear-gradient(145deg, #0969b8 0%, #0b1f40 100%)",
-              boxShadow: "0 8px 30px rgba(9,105,184,0.28)",
+              /* fix 5: warmer dark blue — hint of indigo in the shadow end */
+              background: "linear-gradient(150deg, #1473e6 0%, #0f1d3d 100%)",
+              boxShadow: "0 10px 36px rgba(14,115,230,0.30)",
             }}
           >
-            <div className="px-5 pt-4 flex items-center space-x-1.5">
+            <div className="px-5 pt-5 flex items-center space-x-1.5">
               <Zap size={11} style={{ color: "#fbbf24" }} />
               <span style={{ color: "#fbbf24", fontSize: "11px", fontWeight: 700, letterSpacing: "0.09em" }}>
                 YOUR MOVE TODAY
               </span>
             </div>
 
-            <div className="px-5 pt-3 pb-5">
-              <div className="flex items-center space-x-4">
+            {/* fix 1: more breathing room — pt-4 pb-6, space-x-5 */}
+            <div className="px-5 pt-4 pb-6">
+              <div className="flex items-center space-x-5">
 
                 {/* Large animated ring + avatar */}
-                <div className="relative flex-shrink-0" style={{ width: 76, height: 76 }}>
+                <div className="relative flex-shrink-0" style={{ width: 80, height: 80 }}>
                   <div style={{ position: "absolute", inset: 0 }}>
-                    <AnimatedRing score={hero.healthScore} size={76} strokeWidth={5} delay={200} dark={true} />
+                    <AnimatedRing score={hero.healthScore} size={80} strokeWidth={5} delay={200} dark={true} />
                   </div>
                   <div
                     className="absolute rounded-full flex items-center justify-center font-bold text-white"
                     style={{
-                      inset: "6px",
+                      inset: "7px",
                       backgroundColor: "rgba(255,255,255,0.14)",
                       fontSize: "20px",
                     }}
@@ -496,22 +499,22 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
                       {hero.name}
                     </p>
                   </button>
-                  <p className="mt-0.5 text-sm" style={{ color: "rgba(255,255,255,0.58)" }}>
+                  <p className="mt-1 text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
                     {hero.lastContact} &middot; {hero.healthScore}%
                   </p>
 
                   <div className="flex space-x-2 mt-3">
                     <button
                       onClick={() => onOpenContact(hero)}
-                      className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold"
-                      style={{ backgroundColor: "#fff", color: "#0969b8" }}
+                      className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold"
+                      style={{ backgroundColor: "#fff", color: "#1473e6" }}
                     >
                       <MessageCircle size={13} />
                       <span>Message</span>
                     </button>
                     <button
                       onClick={() => window.open(`tel:${hero.phoneNumber}`, "_self")}
-                      className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold"
+                      className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold"
                       style={{ backgroundColor: "rgba(255,255,255,0.14)", color: "#fff" }}
                     >
                       <Phone size={13} />
@@ -522,8 +525,37 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
               </div>
             </div>
           </div>
-        </div>
-      )}
+        ) : (
+          /* fix 2: empty / all-healthy state — a delightful celebratory card */
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              background: "linear-gradient(150deg, #0969b8 0%, #064a8a 100%)",
+              boxShadow: "0 8px 28px rgba(9,105,184,0.22)",
+            }}
+          >
+            <div className="px-6 py-5 flex items-center space-x-5">
+              <div className="relative flex-shrink-0" style={{ width: 64, height: 64 }}>
+                <AnimatedRing score={avgHealth} size={64} strokeWidth={4.5} delay={200} dark={true} />
+                <div
+                  className="absolute inset-0 flex items-center justify-center font-black"
+                  style={{ color: "#fff", fontSize: "15px", letterSpacing: "-0.02em" }}
+                >
+                  {avgHealth}%
+                </div>
+              </div>
+              <div>
+                <p className="font-bold text-white text-lg leading-tight" style={{ letterSpacing: "-0.01em" }}>
+                  You're on top of it
+                </p>
+                <p className="mt-1 text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
+                  All {relationships.length} relationships are healthy
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* ── Search ──────────────────────────────────────────────────────────── */}
       <div className="px-4 mt-4">
@@ -615,14 +647,20 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
                     </p>
                   </div>
 
+                  {/* fix 4: "Reach out" pill — more visual weight + chevron */}
                   <div className="ml-3 flex-shrink-0">
                     {section.key !== "good" ? (
                       <button
                         onClick={() => onOpenContact(r)}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-full"
-                        style={{ backgroundColor: section.color + "12", color: section.color }}
+                        className="flex items-center space-x-1 text-xs font-bold px-3.5 py-2 rounded-full"
+                        style={{
+                          backgroundColor: section.color + "18",
+                          color: section.color,
+                          border: `1px solid ${section.color}30`,
+                        }}
                       >
-                        {r.isGroup ? "Message" : "Reach out"}
+                        <span>{r.isGroup ? "Message" : "Reach out"}</span>
+                        <ChevronRight size={11} style={{ marginLeft: 1 }} />
                       </button>
                     ) : (
                       <span className="text-sm font-bold" style={{ color: "#0969b8" }}>{r.healthScore}%</span>
