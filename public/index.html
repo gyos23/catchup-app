@@ -2,10 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <!-- PWA / home screen -->
     <meta name="theme-color" content="#0969b8" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CatchUp" />
+
+    <!-- Safe-area insets so content clears the notch/Dynamic Island -->
+    <style>
+      body { margin: 0; background-color: #0969b8; }
+      /* Let the blue header bleed into the status bar area */
+      #root { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+
     <meta name="description" content="CatchUp - Personal Relationship Assistant" />
-    <title>CatchUp - Personal Relationship Assistant</title>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Home screen icons for iOS (Safari uses these, ignores manifest icons) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/icon-180.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/icon-152.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon-180.png" />
+
+    <title>CatchUp</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>

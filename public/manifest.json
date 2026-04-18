@@ -1,0 +1,24 @@
+{
+  "name": "CatchUp",
+  "short_name": "CatchUp",
+  "description": "Your personal relationship health assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0969b8",
+  "theme_color": "#0969b8",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
