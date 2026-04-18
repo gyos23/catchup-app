@@ -1504,7 +1504,7 @@ const CatchUpDashboard = () => {
       {showAbout && <AboutView onBack={() => setShowAbout(false)} />}
 
       {/* ── Design switcher pill (floats above everything) ── */}
-      <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
+      <div className="fixed left-1/2 -translate-x-1/2" style={{ bottom: "calc(max(20px, env(safe-area-inset-bottom)) + 64px)", zIndex: 200, pointerEvents: "auto" }}
            style={{ pointerEvents: "auto" }}>
         <div className="flex items-center space-x-1 rounded-full px-2 py-1.5 shadow-2xl"
              style={{ backgroundColor: "rgba(12,35,64,0.92)", backdropFilter: "blur(12px)" }}>
