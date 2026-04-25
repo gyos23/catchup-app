@@ -2,7 +2,7 @@
 // Complete React Application
 
 import React, { useState, useEffect, useRef } from "react";
-import { DesignA, DesignB, DesignC, DesignD } from "./HomeVariants";
+import { DesignA, DesignB, DesignC, DesignD, DesignE } from "./HomeVariants";
 import {
   User,
   Phone,
@@ -1378,7 +1378,7 @@ const CatchUpDashboard = () => {
   const [showAbout, setShowAbout] = useState(false);
   const [lastSynced, setLastSynced] = useState(null);
   const [designVariant, setDesignVariant] = useState(() =>
-    localStorage.getItem("catchup_design") || "D"
+    localStorage.getItem("catchup_design") || "E"
   );
 
   // Load data and set up auto-refresh every 30 minutes
@@ -1504,11 +1504,12 @@ const CatchUpDashboard = () => {
       {showAbout && <AboutView onBack={() => setShowAbout(false)} />}
 
       {/* ── Design switcher pill (floats above everything) ── */}
-      <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
+      <div className="fixed left-1/2 -translate-x-1/2" style={{ bottom: "calc(max(20px, env(safe-area-inset-bottom)) + 64px)", zIndex: 200, pointerEvents: "auto" }}
            style={{ pointerEvents: "auto" }}>
         <div className="flex items-center space-x-1 rounded-full px-2 py-1.5 shadow-2xl"
              style={{ backgroundColor: "rgba(12,35,64,0.92)", backdropFilter: "blur(12px)" }}>
           {[
+            { key: "E",        label: "⬡ Native" },
             { key: "D",        label: "✦ Focus" },
             { key: "original", label: "Classic" },
             { key: "A",        label: "Coach" },
@@ -1530,6 +1531,15 @@ const CatchUpDashboard = () => {
       </div>
 
       {/* Variant screens */}
+      {designVariant === "E" && !showDetailView && !showAbout && (
+        <DesignE
+          relationships={filteredRelationships.length ? filteredRelationships : relationships}
+          onOpenDetail={openDetailView}
+          onOpenContact={openContactPanel}
+          dataSource={dataSource}
+          lastSynced={lastSynced}
+        />
+      )}
       {designVariant === "D" && !showDetailView && !showAbout && (
         <DesignD
           relationships={filteredRelationships.length ? filteredRelationships : relationships}
