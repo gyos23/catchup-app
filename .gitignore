@@ -23,3 +23,9 @@ yarn-error.log*
 
 # claude worktree internals
 .claude/
+
+# Xcode
+catchup-ios/DerivedData/
+catchup-ios/**/*.xcuserstate
+catchup-ios/**/*.xcuserdata/
+catchup-ios/**/*.xcworkspace/xcuserdata/
