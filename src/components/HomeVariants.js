@@ -1193,7 +1193,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
     <div style={{ padding: "0 0 100px", background: ios.fill }}>
       <div style={{ padding: "8px 16px 0" }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: ios.label2, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 12 }}>
-          Favourites
+          Favorites
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
           {favorites.map((contact, i) => {
@@ -1418,7 +1418,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ fontSize: 34, fontWeight: "700", color: ios.label, letterSpacing: "-0.4px", lineHeight: 1 }}>
             {activeTab === "contacts" ? "Contacts" :
-             activeTab === "favorites" ? "Favourites" :
+             activeTab === "favorites" ? "Favorites" :
              activeTab === "insights" ? "Insights" : "Recents"}
           </div>
           {activeTab === "contacts" && (
@@ -1473,7 +1473,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
         zIndex: 50,
       }}>
         {[
-          { key: "favorites", IconEl: Heart,          label: "Favourites" },
+          { key: "favorites", IconEl: Heart,          label: "Favorites" },
           { key: "recents",   IconEl: Clock,          label: "Recents" },
           { key: "contacts",  IconEl: Phone,          label: "Contacts" },
           { key: "insights",  IconEl: Zap,            label: "Insights", badge: overdueCount > 0 },

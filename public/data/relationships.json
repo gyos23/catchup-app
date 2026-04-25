@@ -1,94 +1,90 @@
 {
-  "generatedAt": "2026-04-18T21:35:36.181Z",
+  "generatedAt": "2026-04-25T10:05:17.933Z",
   "source": "iMessage+Calls",
   "relationships": [
     {
-      "id": 2900697887,
-      "name": "Yli Liriano",
-      "avatar": "YL",
-      "phoneNumber": "+19172920767",
+      "id": 1463659275,
+      "name": "Janice Liriano",
+      "avatar": "JL",
+      "phoneNumber": "+353858738801",
       "isGroup": false,
       "participants": [],
       "participantCount": 1,
       "status": "green",
-      "healthScore": 94,
+      "healthScore": 78,
       "lastContact": "Today",
-      "lastContactDate": "2026-04-18 19:55:33",
-      "contactFrequency": "Daily",
-      "nextSuggested": "Tomorrow",
+      "lastContactDate": "2026-04-25 09:14:39",
+      "contactFrequency": "Weekly",
+      "nextSuggested": "In 2 days",
       "relationship": "Contact",
-      "notes": "You failed to mention your side, so I just got medium",
+      "notes": "Zest usually have a fridge of cakes you can buy, theres a fruit pie that looks n",
       "preferredMethod": "text",
       "email": "",
       "bestTimeToContact": "—",
       "mood": "positive",
-      "topics": [
-        "Travel",
-        "Entertainment",
-        "Food & Dining"
-      ],
+      "topics": [],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
         {
-          "date": "Today",
-          "medium": "iMessage",
+          "date": "Yesterday",
+          "medium": "FaceTime Video",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "You failed to mention your side, so I just got medium"
+          "summary": "FaceTime Video · 1 min"
         },
         {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "Cute"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
+          "date": "2 days ago",
+          "medium": "FaceTime Video",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "For Inish  and Rian"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "Tanks"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "Ill take the shirt and the smiling lady please."
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "Im at dinner"
-        },
-        {
-          "date": "5 days ago",
-          "medium": "FaceTime Audio",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "FaceTime Audio · 5 min"
+          "summary": "FaceTime Video · 0 min"
         },
         {
           "date": "1 week ago",
+          "medium": "FaceTime Video",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Video · 1 min"
+        },
+        {
+          "date": "1 week ago",
+          "medium": "FaceTime Video",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Video · 0 min"
+        },
+        {
+          "date": "1 week ago",
+          "medium": "FaceTime Video",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Video · 2 min"
+        },
+        {
+          "date": "3 weeks ago",
+          "medium": "Phone Call",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Phone Call · 1 min"
+        },
+        {
+          "date": "3 weeks ago",
           "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "FaceTime Audio · 13 min"
+          "summary": "FaceTime Audio · 4 min"
+        },
+        {
+          "date": "4 weeks ago",
+          "medium": "FaceTime Video",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Video · 2 min"
         }
       ],
       "analytics": {
-        "totalContacts": 225,
+        "totalContacts": 53,
         "avgResponseTime": "—",
         "contactFrequency": [
           {
@@ -97,36 +93,36 @@
           },
           {
             "month": "Jan",
-            "contacts": 31
+            "contacts": 0
           },
           {
             "month": "Feb",
-            "contacts": 68
+            "contacts": 25
           },
           {
             "month": "Mar",
-            "contacts": 35
+            "contacts": 20
           },
           {
             "month": "Apr",
-            "contacts": 91
+            "contacts": 8
           }
         ],
         "methodBreakdown": {
-          "calls": 59,
-          "texts": 31,
+          "calls": 48,
+          "texts": 42,
           "social": 10
         },
-        "responsiveness": 81,
+        "responsiveness": 64,
         "initiationRatio": {
-          "me": 42,
-          "them": 183
+          "me": 19,
+          "them": 34
         },
         "callStats": {
-          "phone": 0,
-          "facetimeAudio": 8,
-          "facetimeVideo": 0,
-          "totalMinutes": 73
+          "phone": 1,
+          "facetimeAudio": 1,
+          "facetimeVideo": 6,
+          "totalMinutes": 11
         }
       }
     },
@@ -143,70 +139,70 @@
       ],
       "participantCount": 3,
       "status": "green",
-      "healthScore": 100,
-      "lastContact": "Today",
-      "lastContactDate": "2026-04-18 16:05:58",
+      "healthScore": 90,
+      "lastContact": "2 days ago",
+      "lastContactDate": "2026-04-23 20:34:20",
       "contactFrequency": "Daily",
-      "nextSuggested": "Tomorrow",
+      "nextSuggested": "Now",
       "relationship": "Group Chat",
-      "notes": "Its gonna elevate my moms good even more lol",
+      "notes": "Reacted  to https://www.instagram.com/reel/DQDLyH4Cj1S/?igsh=M",
       "preferredMethod": "text",
       "email": "",
       "bestTimeToContact": "—",
       "mood": "positive",
       "topics": [
-        "Work",
-        "Food & Dining",
-        "Sports"
+        "Sports",
+        "Finance",
+        "Work"
       ],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
         {
-          "date": "Today",
+          "date": "5 months ago",
           "medium": "iMessage",
           "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Its gonna elevate my moms good even more lol"
+          "initiatedBy": "me",
+          "summary": "Reacted  to https://www.instagram.com/reel/DQDLyH4Cj1S/?igsh=M"
         },
         {
-          "date": "Today",
+          "date": "14 months ago",
           "medium": "iMessage",
           "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Hell yea! Im gonna go to my fav dospensary and grab some dog walkers"
+          "initiatedBy": "me",
+          "summary": "Friendly consumer announcement. These new AirPods noise cancellation is no joke. Its the best Ive ex"
         },
         {
-          "date": "Today",
+          "date": "23 months ago",
           "medium": "iMessage",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "And its ya bday weekend!!!"
+          "summary": "Complimentary ticket"
         },
         {
-          "date": "Today",
+          "date": "23 months ago",
           "medium": "iMessage",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "Yeah I know Lou partakes"
+          "summary": "Complimentary drinks please"
         },
         {
-          "date": "Today",
+          "date": "23 months ago",
           "medium": "iMessage",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "Emphasized Joshua our find your love remix still a classic"
+          "summary": "Upgrade my hotel room"
         },
         {
-          "date": "Today",
+          "date": "23 months ago",
           "medium": "iMessage",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "I been laying off except for yesterday though"
+          "summary": "Upgrade my seat"
         }
       ],
       "analytics": {
-        "totalContacts": 452,
+        "totalContacts": 163,
         "avgResponseTime": "—",
         "contactFrequency": [
           {
@@ -215,7 +211,7 @@
           },
           {
             "month": "Jan",
-            "contacts": 54
+            "contacts": 21
           },
           {
             "month": "Feb",
@@ -227,228 +223,203 @@
           },
           {
             "month": "Apr",
-            "contacts": 942
+            "contacts": 108
           }
         ],
         "methodBreakdown": {
-          "calls": 48,
-          "texts": 42,
+          "calls": 34,
+          "texts": 56,
           "social": 10
         },
-        "responsiveness": 263,
+        "responsiveness": 239,
         "initiationRatio": {
-          "me": 168,
-          "them": 1188
+          "me": 99,
+          "them": 390
         },
         "callStats": null
       }
     },
     {
-      "id": 2187776885,
-      "name": "Rizz Caraballo",
-      "avatar": "RC",
-      "phoneNumber": "+16469157602",
+      "id": 1088137529,
+      "name": "The Sandlot",
+      "avatar": "TS",
+      "phoneNumber": "",
+      "isGroup": true,
+      "participants": [
+        "Jean De Jesus",
+        "Rick Hierro",
+        "Rick Hierro",
+        "+19732807118",
+        "+16463054247",
+        "Argenis Hierro",
+        "Gerard Valentin Hernandez",
+        "+19174201588",
+        "Anthony Caba"
+      ],
+      "participantCount": 8,
+      "status": "yellow",
+      "healthScore": 67,
+      "lastContact": "2 days ago",
+      "lastContactDate": "2026-04-23 16:08:49",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "In 3 days",
+      "relationship": "Group Chat",
+      "notes": "https://www.instagram.com/reel/DV4FRLhsUcJ/?igsh=ZXY0NTkzdmRsN3Ry",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "neutral",
+      "topics": [],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "4 weeks ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "https://www.instagram.com/reel/DV4FRLhsUcJ/?igsh=ZXY0NTkzdmRsN3Ry"
+        },
+        {
+          "date": "1 month ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "https://www.instagram.com/reel/DWHR0wZAPko/?igsh=MWxtb2g1MGF1ZGh6eA=="
+        },
+        {
+          "date": "1 month ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "https://www.instagram.com/reel/DV2MBvOjsGD/?igsh=MTB2Y2loY2JibWJpeA=="
+        }
+      ],
+      "analytics": {
+        "totalContacts": 18,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 0
+          },
+          {
+            "month": "Feb",
+            "contacts": 0
+          },
+          {
+            "month": "Mar",
+            "contacts": 128
+          },
+          {
+            "month": "Apr",
+            "contacts": 16
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 43,
+          "texts": 47,
+          "social": 10
+        },
+        "responsiveness": 756,
+        "initiationRatio": {
+          "me": 8,
+          "them": 136
+        },
+        "callStats": null
+      }
+    },
+    {
+      "id": 2900697887,
+      "name": "Yli Liriano",
+      "avatar": "YL",
+      "phoneNumber": "+19172920767",
       "isGroup": false,
       "participants": [],
       "participantCount": 1,
       "status": "green",
-      "healthScore": 82,
-      "lastContact": "Today",
-      "lastContactDate": "2026-04-18 15:42:04",
-      "contactFrequency": "Bi-weekly",
-      "nextSuggested": "In 4 days",
+      "healthScore": 88,
+      "lastContact": "6 days ago",
+      "lastContactDate": "2026-04-19 17:44:39",
+      "contactFrequency": "Daily",
+      "nextSuggested": "Now",
       "relationship": "Contact",
-      "notes": "Lol",
+      "notes": "Lmdao",
       "preferredMethod": "text",
       "email": "",
       "bestTimeToContact": "—",
       "mood": "positive",
       "topics": [
-        "Work",
         "Health",
-        "Finance"
+        "Family",
+        "Travel"
       ],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
         {
-          "date": "Today",
-          "medium": "iMessage",
+          "date": "1 week ago",
+          "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "Lol"
+          "summary": "FaceTime Audio · 5 min"
         },
         {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "I just might not see it"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "You can call me whenever you know that"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
+          "date": "2 weeks ago",
+          "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "I was like its orolly 4 in the am over there lets wake him up lol"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Lol no doubt bro"
-        },
-        {
-          "date": "Today",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "Im still it. My bad I just saw your call."
+          "summary": "FaceTime Audio · 13 min"
         },
         {
           "date": "1 month ago",
           "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "FaceTime Audio · 5 min"
-        }
-      ],
-      "analytics": {
-        "totalContacts": 21,
-        "avgResponseTime": "—",
-        "contactFrequency": [
-          {
-            "month": "Dec",
-            "contacts": 0
-          },
-          {
-            "month": "Jan",
-            "contacts": 0
-          },
-          {
-            "month": "Feb",
-            "contacts": 1
-          },
-          {
-            "month": "Mar",
-            "contacts": 5
-          },
-          {
-            "month": "Apr",
-            "contacts": 15
-          }
-        ],
-        "methodBreakdown": {
-          "calls": 47,
-          "texts": 43,
-          "social": 10
-        },
-        "responsiveness": 62,
-        "initiationRatio": {
-          "me": 8,
-          "them": 13
-        },
-        "callStats": {
-          "phone": 0,
-          "facetimeAudio": 1,
-          "facetimeVideo": 0,
-          "totalMinutes": 5
-        }
-      }
-    },
-    {
-      "id": 1463659275,
-      "name": "Janice Liriano",
-      "avatar": "JL",
-      "phoneNumber": "+353858738801",
-      "isGroup": false,
-      "participants": [],
-      "participantCount": 1,
-      "status": "green",
-      "healthScore": 78,
-      "lastContact": "2 days ago",
-      "lastContactDate": "2026-04-16 17:16:16",
-      "contactFrequency": "Weekly",
-      "nextSuggested": "Now",
-      "relationship": "Contact",
-      "notes": "Im bringing the kids to see the horses",
-      "preferredMethod": "text",
-      "email": "",
-      "bestTimeToContact": "—",
-      "mood": "positive",
-      "topics": [
-        "Family"
-      ],
-      "recentContext": [],
-      "aiSuggestions": [],
-      "contactHistory": [
-        {
-          "date": "Yesterday",
-          "medium": "FaceTime Video",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "FaceTime Video · 1 min"
+          "summary": "FaceTime Audio · 12 min"
         },
         {
-          "date": "2 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Im bringing the kids to see the horses"
-        },
-        {
-          "date": "3 days ago",
-          "medium": "FaceTime Video",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "FaceTime Video · 0 min"
-        },
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Thanks honey"
-        },
-        {
-          "date": "5 days ago",
-          "medium": "FaceTime Video",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "FaceTime Video · 2 min"
-        },
-        {
-          "date": "2 weeks ago",
-          "medium": "Phone Call",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Phone Call · 1 min"
-        },
-        {
-          "date": "2 weeks ago",
+          "date": "1 month ago",
           "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "FaceTime Audio · 4 min"
+          "summary": "FaceTime Audio · 1 min"
         },
         {
-          "date": "3 weeks ago",
-          "medium": "FaceTime Video",
+          "date": "1 month ago",
+          "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "FaceTime Video · 2 min"
+          "summary": "FaceTime Audio · 2 min"
+        },
+        {
+          "date": "1 month ago",
+          "medium": "FaceTime Audio",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Audio · 2 min"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Lmdao"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Un hombre 6 months"
         }
       ],
       "analytics": {
-        "totalContacts": 57,
+        "totalContacts": 178,
         "avgResponseTime": "—",
         "contactFrequency": [
           {
@@ -457,150 +428,36 @@
           },
           {
             "month": "Jan",
-            "contacts": 4
+            "contacts": 12
           },
           {
             "month": "Feb",
-            "contacts": 25
+            "contacts": 68
           },
           {
             "month": "Mar",
-            "contacts": 20
+            "contacts": 35
           },
           {
             "month": "Apr",
-            "contacts": 8
+            "contacts": 63
           }
         ],
         "methodBreakdown": {
-          "calls": 50,
-          "texts": 40,
+          "calls": 62,
+          "texts": 28,
           "social": 10
         },
-        "responsiveness": 67,
+        "responsiveness": 87,
         "initiationRatio": {
-          "me": 19,
-          "them": 38
-        },
-        "callStats": {
-          "phone": 1,
-          "facetimeAudio": 2,
-          "facetimeVideo": 5,
-          "totalMinutes": 21
-        }
-      }
-    },
-    {
-      "id": 2608080413,
-      "name": "Charles Hamlin",
-      "avatar": "CH",
-      "phoneNumber": "+17186639699",
-      "isGroup": false,
-      "participants": [],
-      "participantCount": 1,
-      "status": "green",
-      "healthScore": 70,
-      "lastContact": "4 days ago",
-      "lastContactDate": "2026-04-14 18:37:33",
-      "contactFrequency": "Bi-weekly",
-      "nextSuggested": "Now",
-      "relationship": "Contact",
-      "notes": "Do you know whats making you  perpetually sad? You dont have to share but Im cur",
-      "preferredMethod": "text",
-      "email": "",
-      "bestTimeToContact": "—",
-      "mood": "neutral",
-      "topics": [
-        "Work",
-        "Family",
-        "Health"
-      ],
-      "recentContext": [],
-      "aiSuggestions": [],
-      "contactHistory": [
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "Do you know whats making you  perpetually sad? You dont have to share but Im curious if you know the"
-        },
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Nunca he ido en persona"
-        },
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "Loved They do video conferencing. Only time I saw a physical therapist was  a brother up in Atlanta "
-        },
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "They do video conferencing. Only time I saw a physical therapist was  a brother up in Atlanta who wa"
-        },
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "I saw a commercial for betterhelp and thought I could sign up to get someone on the US side"
-        },
-        {
-          "date": "4 days ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "me",
-          "summary": "I have to see what coverage I have with my health insurance."
-        }
-      ],
-      "analytics": {
-        "totalContacts": 24,
-        "avgResponseTime": "—",
-        "contactFrequency": [
-          {
-            "month": "Dec",
-            "contacts": 0
-          },
-          {
-            "month": "Jan",
-            "contacts": 0
-          },
-          {
-            "month": "Feb",
-            "contacts": 0
-          },
-          {
-            "month": "Mar",
-            "contacts": 0
-          },
-          {
-            "month": "Apr",
-            "contacts": 24
-          }
-        ],
-        "methodBreakdown": {
-          "calls": 32,
-          "texts": 58,
-          "social": 10
-        },
-        "responsiveness": 38,
-        "initiationRatio": {
-          "me": 15,
-          "them": 9
+          "me": 23,
+          "them": 155
         },
         "callStats": {
           "phone": 0,
-          "facetimeAudio": 0,
+          "facetimeAudio": 6,
           "facetimeVideo": 0,
-          "totalMinutes": 0
+          "totalMinutes": 34
         }
       }
     },
@@ -613,8 +470,8 @@
       "participants": [],
       "participantCount": 1,
       "status": "yellow",
-      "healthScore": 60,
-      "lastContact": "1 week ago",
+      "healthScore": 53,
+      "lastContact": "2 weeks ago",
       "lastContactDate": "2026-04-11 03:30:12",
       "contactFrequency": "Bi-weekly",
       "nextSuggested": "Now",
@@ -636,22 +493,15 @@
           "summary": "FaceTime Audio · 7 min"
         },
         {
-          "date": "2 months ago",
-          "medium": "FaceTime Audio",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "FaceTime Audio · 80 min"
-        },
-        {
           "date": "3 months ago",
           "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
-          "summary": "FaceTime Audio · 4 min"
+          "summary": "FaceTime Audio · 80 min"
         }
       ],
       "analytics": {
-        "totalContacts": 13,
+        "totalContacts": 12,
         "avgResponseTime": "—",
         "contactFrequency": [
           {
@@ -660,7 +510,7 @@
           },
           {
             "month": "Jan",
-            "contacts": 1
+            "contacts": 0
           },
           {
             "month": "Feb",
@@ -683,13 +533,141 @@
         "responsiveness": 92,
         "initiationRatio": {
           "me": 1,
-          "them": 12
+          "them": 11
         },
         "callStats": {
           "phone": 0,
-          "facetimeAudio": 3,
+          "facetimeAudio": 2,
           "facetimeVideo": 0,
-          "totalMinutes": 91
+          "totalMinutes": 87
+        }
+      }
+    },
+    {
+      "id": 2187776885,
+      "name": "Rizz Caraballo",
+      "avatar": "RC",
+      "phoneNumber": "+16469157602",
+      "isGroup": false,
+      "participants": [],
+      "participantCount": 1,
+      "status": "yellow",
+      "healthScore": 65,
+      "lastContact": "3 weeks ago",
+      "lastContactDate": "2026-04-07 21:10:18",
+      "contactFrequency": "Bi-weekly",
+      "nextSuggested": "Now",
+      "relationship": "Contact",
+      "notes": "Hows that transition going?",
+      "preferredMethod": "text",
+      "email": "",
+      "bestTimeToContact": "—",
+      "mood": "neutral",
+      "topics": [
+        "Work",
+        "Health",
+        "Finance"
+      ],
+      "recentContext": [],
+      "aiSuggestions": [],
+      "contactHistory": [
+        {
+          "date": "6 days ago",
+          "medium": "FaceTime Audio",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Audio · 19 min"
+        },
+        {
+          "date": "2 months ago",
+          "medium": "FaceTime Audio",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "FaceTime Audio · 5 min"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Hows that transition going?"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Lol thats my boyyyy"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Hownmy new nephew doing?"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Hows everything on your end bro"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Im taking some classes over the summer to ip my salary this year so im basically laying low"
+        },
+        {
+          "date": "22 months ago",
+          "medium": "iMessage",
+          "subject": "—",
+          "initiatedBy": "them",
+          "summary": "Relaxing and chilling"
+        }
+      ],
+      "analytics": {
+        "totalContacts": 9,
+        "avgResponseTime": "—",
+        "contactFrequency": [
+          {
+            "month": "Dec",
+            "contacts": 0
+          },
+          {
+            "month": "Jan",
+            "contacts": 0
+          },
+          {
+            "month": "Feb",
+            "contacts": 1
+          },
+          {
+            "month": "Mar",
+            "contacts": 5
+          },
+          {
+            "month": "Apr",
+            "contacts": 3
+          }
+        ],
+        "methodBreakdown": {
+          "calls": 57,
+          "texts": 33,
+          "social": 10
+        },
+        "responsiveness": 78,
+        "initiationRatio": {
+          "me": 2,
+          "them": 7
+        },
+        "callStats": {
+          "phone": 0,
+          "facetimeAudio": 2,
+          "facetimeVideo": 0,
+          "totalMinutes": 24
         }
       }
     },
@@ -701,9 +679,9 @@
       "isGroup": false,
       "participants": [],
       "participantCount": 1,
-      "status": "yellow",
-      "healthScore": 66,
-      "lastContact": "3 weeks ago",
+      "status": "green",
+      "healthScore": 72,
+      "lastContact": "4 weeks ago",
       "lastContactDate": "2026-03-30 21:08:30",
       "contactFrequency": "Bi-weekly",
       "nextSuggested": "Now",
@@ -712,13 +690,13 @@
       "preferredMethod": "text",
       "email": "",
       "bestTimeToContact": "—",
-      "mood": "neutral",
+      "mood": "positive",
       "topics": [],
       "recentContext": [],
       "aiSuggestions": [],
       "contactHistory": [
         {
-          "date": "6 days ago",
+          "date": "1 week ago",
           "medium": "FaceTime Audio",
           "subject": "—",
           "initiatedBy": "them",
@@ -730,17 +708,10 @@
           "subject": "—",
           "initiatedBy": "them",
           "summary": "Phone Call · 3 min"
-        },
-        {
-          "date": "3 months ago",
-          "medium": "FaceTime Audio",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "FaceTime Audio · 16 min"
         }
       ],
       "analytics": {
-        "totalContacts": 19,
+        "totalContacts": 17,
         "avgResponseTime": "—",
         "contactFrequency": [
           {
@@ -749,7 +720,7 @@
           },
           {
             "month": "Jan",
-            "contacts": 2
+            "contacts": 0
           },
           {
             "month": "Feb",
@@ -769,111 +740,17 @@
           "texts": 55,
           "social": 10
         },
-        "responsiveness": 42,
+        "responsiveness": 41,
         "initiationRatio": {
-          "me": 11,
-          "them": 8
+          "me": 10,
+          "them": 7
         },
         "callStats": {
           "phone": 1,
-          "facetimeAudio": 2,
+          "facetimeAudio": 1,
           "facetimeVideo": 0,
-          "totalMinutes": 28
+          "totalMinutes": 12
         }
-      }
-    },
-    {
-      "id": 1088137529,
-      "name": "The Sandlot",
-      "avatar": "TS",
-      "phoneNumber": "",
-      "isGroup": true,
-      "participants": [
-        "Jean De Jesus",
-        "Rick Hierro",
-        "Rick Hierro",
-        "+19732807118",
-        "+16463054247",
-        "Argenis Hierro",
-        "Gerard Valentin Hernandez",
-        "+19174201588",
-        "Anthony Caba"
-      ],
-      "participantCount": 8,
-      "status": "yellow",
-      "healthScore": 42,
-      "lastContact": "3 weeks ago",
-      "lastContactDate": "2026-03-29 14:27:05",
-      "contactFrequency": "Bi-weekly",
-      "nextSuggested": "Now",
-      "relationship": "Group Chat",
-      "notes": "https://www.instagram.com/reel/DV4FRLhsUcJ/?igsh=ZXY0NTkzdmRsN3Ry",
-      "preferredMethod": "text",
-      "email": "",
-      "bestTimeToContact": "—",
-      "mood": "neutral",
-      "topics": [],
-      "recentContext": [],
-      "aiSuggestions": [],
-      "contactHistory": [
-        {
-          "date": "3 weeks ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "https://www.instagram.com/reel/DV4FRLhsUcJ/?igsh=ZXY0NTkzdmRsN3Ry"
-        },
-        {
-          "date": "4 weeks ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "https://www.instagram.com/reel/DWHR0wZAPko/?igsh=MWxtb2g1MGF1ZGh6eA=="
-        },
-        {
-          "date": "1 month ago",
-          "medium": "iMessage",
-          "subject": "—",
-          "initiatedBy": "them",
-          "summary": "https://www.instagram.com/reel/DV2MBvOjsGD/?igsh=MTB2Y2loY2JibWJpeA=="
-        }
-      ],
-      "analytics": {
-        "totalContacts": 16,
-        "avgResponseTime": "—",
-        "contactFrequency": [
-          {
-            "month": "Dec",
-            "contacts": 0
-          },
-          {
-            "month": "Jan",
-            "contacts": 0
-          },
-          {
-            "month": "Feb",
-            "contacts": 0
-          },
-          {
-            "month": "Mar",
-            "contacts": 128
-          },
-          {
-            "month": "Apr",
-            "contacts": 0
-          }
-        ],
-        "methodBreakdown": {
-          "calls": 40,
-          "texts": 50,
-          "social": 10
-        },
-        "responsiveness": 750,
-        "initiationRatio": {
-          "me": 8,
-          "them": 120
-        },
-        "callStats": null
       }
     }
   ]
