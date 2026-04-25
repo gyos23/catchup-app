@@ -1006,8 +1006,11 @@ function NativeAvatarLarge({ contact, size = 64, strokeWidth = 3, delay = 0 }) {
 }
 
 function daysSinceContact(contact) {
-  if (!contact.lastContact) return null;
-  return Math.floor((Date.now() - new Date(contact.lastContact).getTime()) / 86400000);
+  const raw = contact.lastContactDate || contact.lastContact;
+  if (!raw) return null;
+  const ms = Date.now() - new Date(raw).getTime();
+  if (isNaN(ms) || ms < 0) return null;
+  return Math.floor(ms / 86400000);
 }
 
 function daysLabel(days) {
@@ -1030,6 +1033,30 @@ function urgencyLabel(contact) {
 
 const nativeSf = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif";
 
+function InsightsRing({ score, size = 72, strokeWidth = 5 }) {
+  const [filled, setFilled] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setFilled(true), 120); return () => clearTimeout(t); }, []);
+  const r = (size - strokeWidth * 2) / 2;
+  const circ = 2 * Math.PI * r;
+  const color = score >= 70 ? ios.green : score >= 40 ? ios.orange : ios.red;
+  const offset = circ - (score / 100) * circ;
+  return (
+    <svg width={size} height={size}>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={ios.fill2} strokeWidth={strokeWidth}/>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={strokeWidth}
+        strokeLinecap="round" strokeDasharray={circ}
+        strokeDashoffset={filled ? offset : circ}
+        transform={`rotate(-90 ${size/2} ${size/2})`}
+        style={{ transition: filled ? "stroke-dashoffset 1.1s cubic-bezier(0.22,1,0.36,1)" : "none" }}
+      />
+      <text x={size/2} y={size/2 + 6} textAnchor="middle"
+        style={{ fontSize: 18, fontWeight: "700", fill: ios.label, fontFamily: nativeSf }}>
+        {score}
+      </text>
+    </svg>
+  );
+}
+
 export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource, lastSynced }) {
   const [activeTab, setActiveTab] = useState("contacts");
   const [searchQuery, setSearchQuery] = useState("");
@@ -1037,13 +1064,13 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
   const individuals = relationships.filter(r => !r.isGroup);
 
   const favorites = [...individuals]
-    .sort((a, b) => a.healthScore - b.healthScore)
+    .sort((a, b) => b.healthScore - a.healthScore)
     .slice(0, 6);
 
-  const yourMove = individuals.reduce((best, r) => {
-    if (!best) return r;
-    return r.healthScore < best.healthScore ? r : best;
-  }, null);
+  // "Your move" = most overdue person who isn't already at 100% and wasn't contacted today
+  const yourMove = [...individuals]
+    .filter(r => r.healthScore < 100 && daysSinceContact(r) !== 0)
+    .sort((a, b) => a.healthScore - b.healthScore)[0] || individuals[0] || null;
 
   const filtered = individuals.filter(r =>
     !searchQuery || r.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -1074,25 +1101,8 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
             Relationship Health
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 16 }}>
-            <div style={{ position: "relative", width: 72, height: 72, flexShrink: 0 }}>
-              {(() => {
-                const size = 72, sw = 5, r = (size - sw * 2) / 2, circ = 2 * Math.PI * r;
-                const color = avgHealth >= 70 ? ios.green : avgHealth >= 40 ? ios.orange : ios.red;
-                const offset = circ - (avgHealth / 100) * circ;
-                return (
-                  <svg width={size} height={size}>
-                    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={ios.fill2} strokeWidth={sw}/>
-                    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={sw}
-                      strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset}
-                      transform={`rotate(-90 ${size/2} ${size/2})`}
-                    />
-                    <text x={size/2} y={size/2 + 6} textAnchor="middle"
-                      style={{ fontSize: 18, fontWeight: "700", fill: ios.label, fontFamily: nativeSf }}>
-                      {avgHealth}
-                    </text>
-                  </svg>
-                );
-              })()}
+            <div style={{ flexShrink: 0 }}>
+              <InsightsRing score={avgHealth} />
             </div>
             <div>
               <div style={{ fontSize: 22, fontWeight: "700", color: ios.label, letterSpacing: "-0.4px" }}>
