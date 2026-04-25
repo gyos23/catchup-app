@@ -6,10 +6,10 @@
  * D: Focus    — ADA candidate: animated rings + hero + clean sections
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Heart, Phone, MessageCircle, Search, ChevronRight,
-  Zap, Clock, CheckCircle, AlertTriangle, X, Plus,
+  Zap, Clock, CheckCircle, AlertTriangle, X, Plus, Users,
 } from "lucide-react";
 
 const brand = {
@@ -1057,9 +1057,133 @@ function InsightsRing({ score, size = 72, strokeWidth = 5 }) {
   );
 }
 
+// Parse relative date strings to timestamps for recents sorting
+function parseRelativeDate(str) {
+  if (!str) return 0;
+  const s = str.toLowerCase().trim();
+  const now = Date.now();
+  if (s === "today") return now - 1000;
+  if (s === "yesterday") return now - 86400000;
+  const m = s.match(/(\d+)\s*(day|week|month|year)/);
+  if (!m) return 0;
+  const n = parseInt(m[1]);
+  const mult = { day: 86400000, week: 604800000, month: 2592000000, year: 31536000000 };
+  return now - n * (mult[m[2]] || 0);
+}
+
+// Build a context-aware AI suggestion for a contact
+function buildSuggestion(contact) {
+  const notes = (contact.notes || "").trim();
+  const topics = contact.topics || [];
+  const days = daysSinceContact(contact);
+  if (notes.length > 10 && !notes.startsWith("http") && !notes.includes("instagram.com")) {
+    const snippet = notes.length > 70 ? notes.slice(0, 70) + "…" : notes;
+    return `Follow up: "${snippet}"`;
+  }
+  if (topics.length > 0) return `Ask about ${topics[0].toLowerCase()} — you two talk about it often.`;
+  if (days !== null && days > 14) return `It's been ${daysLabel(days)} — a quick "thinking of you" goes a long way.`;
+  return "Keep the momentum going — say hi.";
+}
+
+// Native contact detail bottom sheet
+function ContactSheet({ contact, onClose }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), 10); return () => clearTimeout(t); }, []);
+  const suggestion = buildSuggestion(contact);
+  const history = (contact.contactHistory || []).slice(0, 7);
+  const close = () => { setVisible(false); setTimeout(onClose, 300); };
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+      <div onClick={close} style={{
+        position: "absolute", inset: 0,
+        background: "rgba(0,0,0,0.38)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)",
+        opacity: visible ? 1 : 0, transition: "opacity 0.28s ease",
+      }} />
+      <div style={{
+        position: "relative", background: ios.card,
+        borderRadius: "22px 22px 0 0",
+        paddingBottom: "max(28px, env(safe-area-inset-bottom))",
+        maxHeight: "88svh", overflowY: "auto",
+        transform: visible ? "translateY(0)" : "translateY(100%)",
+        transition: "transform 0.32s cubic-bezier(0.32, 0.72, 0, 1)",
+      }}>
+        {/* Handle */}
+        <div style={{ display: "flex", justifyContent: "center", padding: "10px 0 2px" }}>
+          <div style={{ width: 36, height: 4, borderRadius: 2, background: ios.fill2 }} />
+        </div>
+        {/* Avatar + name */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 20px 16px", gap: 8 }}>
+          <NativeAvatarLarge contact={contact} size={88} delay={80} />
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 22, fontWeight: "700", color: ios.label, letterSpacing: "-0.3px" }}>{contact.name}</div>
+            {contact.phoneNumber
+              ? <div style={{ fontSize: 14, color: ios.label2, marginTop: 2 }}>{contact.phoneNumber}</div>
+              : contact.isGroup && contact.participants?.length > 0
+              ? <div style={{ fontSize: 13, color: ios.label2, marginTop: 2 }}>{contact.participants.join(" · ")}</div>
+              : null}
+          </div>
+        </div>
+        {/* Action buttons */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 16, padding: "0 20px 20px" }}>
+          {[{ label: "message", Icon: MessageCircle, color: ios.blue }, { label: "call", Icon: Phone, color: ios.green }].map(({ label, Icon, color }) => (
+            <div key={label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: ios.fill, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                <Icon size={24} color={color} />
+              </div>
+              <span style={{ fontSize: 12, color: ios.label2 }}>{label}</span>
+            </div>
+          ))}
+        </div>
+        {/* AI suggestion */}
+        <div style={{ margin: "0 16px 14px", background: "rgba(0,122,255,0.08)", borderRadius: 14, padding: "12px 14px", display: "flex", gap: 10, alignItems: "flex-start" }}>
+          <Zap size={16} color={ios.blue} style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ fontSize: 14, color: ios.label, lineHeight: 1.45 }}>{suggestion}</div>
+        </div>
+        {/* Topics */}
+        {contact.topics?.length > 0 && (
+          <div style={{ padding: "0 16px 14px", display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {contact.topics.map(t => (
+              <div key={t} style={{ background: ios.fill2, borderRadius: 20, padding: "4px 12px", fontSize: 13, color: ios.label2, fontWeight: "500" }}>{t}</div>
+            ))}
+          </div>
+        )}
+        {/* Recent activity */}
+        {history.length > 0 && (
+          <div style={{ margin: "0 16px 8px" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: ios.label2, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>Recent Activity</div>
+            <div style={{ background: ios.fill, borderRadius: 14, overflow: "hidden" }}>
+              {history.map((h, i) => {
+                const isCall = h.medium && !h.medium.toLowerCase().includes("imessage");
+                const hasBody = h.summary && h.summary !== "—" && !h.summary.match(/^(FaceTime|Phone Call)/);
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", borderBottom: i < history.length - 1 ? `1px solid ${ios.separator}` : "none" }}>
+                    <div style={{ width: 30, height: 30, borderRadius: "50%", background: ios.card, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      {isCall ? <Phone size={14} color={ios.green} /> : <MessageCircle size={14} color={ios.blue} />}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, color: ios.label }}>{h.medium}</div>
+                      {hasBody && <div style={{ fontSize: 12, color: ios.label2, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.summary}</div>}
+                    </div>
+                    <div style={{ fontSize: 12, color: ios.label3, flexShrink: 0 }}>{h.date}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource, lastSynced }) {
   const [activeTab, setActiveTab] = useState("contacts");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedContact, setSelectedContact] = useState(null);
+  const sectionRefs = useRef({});
+
+  const openSheet = (contact) => setSelectedContact(contact);
+  const closeSheet = () => setSelectedContact(null);
 
   const individuals = relationships.filter(r => !r.isGroup);
 
@@ -1067,12 +1191,13 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
     .sort((a, b) => b.healthScore - a.healthScore)
     .slice(0, 6);
 
-  // "Your move" = most overdue person who isn't already at 100% and wasn't contacted today
+  // "Your move" = most overdue person who isn't at 100% and wasn't contacted today
   const yourMove = [...individuals]
     .filter(r => r.healthScore < 100 && daysSinceContact(r) !== 0)
     .sort((a, b) => a.healthScore - b.healthScore)[0] || individuals[0] || null;
 
-  const filtered = individuals.filter(r =>
+  // Contacts list includes everyone (individuals + groups)
+  const filtered = relationships.filter(r =>
     !searchQuery || r.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -1084,7 +1209,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
   });
   const letters = Object.keys(alphaSections).sort();
 
-  const priority = filtered
+  const priority = [...relationships]
     .filter(r => r.healthScore < 60)
     .sort((a, b) => a.healthScore - b.healthScore)
     .slice(0, 3);
@@ -1092,6 +1217,17 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
   const avgHealth = Math.round(
     individuals.reduce((s, r) => s + r.healthScore, 0) / Math.max(individuals.length, 1)
   );
+
+  // Recents: flatten all contactHistory, sort by recency
+  const recents = relationships
+    .flatMap(r => (r.contactHistory || []).map(h => ({ ...h, contact: r })))
+    .sort((a, b) => parseRelativeDate(b.date) - parseRelativeDate(a.date))
+    .slice(0, 40);
+
+  const scrollToLetter = (letter) => {
+    const el = sectionRefs.current[letter];
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const InsightsTab = () => (
     <div style={{ padding: "0 0 100px", background: ios.fill }}>
@@ -1147,7 +1283,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
                 padding: "12px 16px",
                 borderBottom: i < priority.length - 1 ? `1px solid ${ios.separator}` : "none",
                 cursor: "pointer",
-              }} onClick={() => onOpenContact && onOpenContact(contact)}>
+              }} onClick={() => openSheet(contact)}>
                 <NativeAvatar contact={contact} size={44} delay={200 + i * 80} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 16, color: ios.label }}>{contact.name}</div>
@@ -1200,7 +1336,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
             const urgency = urgencyLabel(contact);
             return (
               <div key={contact.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, cursor: "pointer" }}
-                onClick={() => onOpenContact && onOpenContact(contact)}>
+                onClick={() => openSheet(contact)}>
                 <NativeAvatarLarge contact={contact} size={64} delay={100 + i * 60} />
                 <div style={{ fontSize: 12, color: ios.label, textAlign: "center", fontWeight: "400", maxWidth: 72, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {contact.name?.split(" ")[0]}
@@ -1229,7 +1365,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
                 padding: "10px 16px",
                 borderBottom: i < arr.length - 1 ? `1px solid ${ios.separator}` : "none",
                 cursor: "pointer",
-              }} onClick={() => onOpenContact && onOpenContact(contact)}>
+              }} onClick={() => openSheet(contact)}>
                 <NativeAvatar contact={contact} size={44} delay={300 + i * 60} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, color: ios.label }}>{contact.name}</div>
@@ -1247,27 +1383,21 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
   const ContactsTab = () => (
     <div style={{ display: "flex", position: "relative" }}>
       <div style={{ flex: 1, paddingBottom: 100 }}>
+        {/* Your move today */}
         {!searchQuery && yourMove && (
           <div style={{ margin: "8px 16px 0" }}>
             <div style={{
               background: ios.card, borderRadius: 16, padding: "14px 16px",
               display: "flex", alignItems: "center", gap: 12,
-              boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-              cursor: "pointer",
-            }} onClick={() => onOpenContact && onOpenContact(yourMove)}>
-              <div style={{
-                width: 36, height: 36, borderRadius: "50%",
-                background: "linear-gradient(135deg, #007AFF, #5AC8FA)",
-                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-              }}>
+              boxShadow: "0 1px 3px rgba(0,0,0,0.08)", cursor: "pointer",
+            }} onClick={() => openSheet(yourMove)}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, #007AFF, #5AC8FA)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <Zap size={18} color="#fff" fill="#fff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: "600", color: ios.blue, textTransform: "uppercase", letterSpacing: "0.4px" }}>
-                  Your move today
-                </div>
+                <div style={{ fontSize: 12, fontWeight: "600", color: ios.blue, textTransform: "uppercase", letterSpacing: "0.4px" }}>Your move today</div>
                 <div style={{ fontSize: 15, color: ios.label, fontWeight: "500", marginTop: 1 }}>
-                  Reach out to {yourMove.name?.split(" ")[0]}
+                  {buildSuggestion(yourMove).replace(/^Follow up: |^Ask about |^Keep the /, "").slice(0, 50)}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
@@ -1282,6 +1412,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
           </div>
         )}
 
+        {/* Needs attention */}
         {!searchQuery && priority.length > 0 && (
           <div style={{ marginTop: 20 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: ios.label2, textTransform: "uppercase", letterSpacing: "0.5px", padding: "0 16px 6px" }}>
@@ -1293,11 +1424,9 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
                 const urgency = urgencyLabel(contact);
                 return (
                   <div key={contact.id} style={{
-                    display: "flex", alignItems: "center", gap: 12,
-                    padding: "10px 16px",
-                    borderBottom: `1px solid ${ios.separator}`,
-                    cursor: "pointer",
-                  }} onClick={() => onOpenContact && onOpenContact(contact)}>
+                    display: "flex", alignItems: "center", gap: 12, padding: "10px 16px",
+                    borderBottom: `1px solid ${ios.separator}`, cursor: "pointer",
+                  }} onClick={() => openSheet(contact)}>
                     <NativeAvatar contact={contact} size={44} delay={100 + i * 65} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 16, color: ios.label }}>{contact.name}</div>
@@ -1315,8 +1444,9 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
           </div>
         )}
 
+        {/* Alphabetical list — includes groups */}
         {letters.map(letter => (
-          <div key={letter}>
+          <div key={letter} ref={el => { sectionRefs.current[letter] = el; }}>
             <div style={{ padding: "6px 16px 2px", background: ios.fill, fontSize: 14, fontWeight: "600", color: ios.label, marginTop: 8 }}>
               {letter}
             </div>
@@ -1324,23 +1454,33 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
               {alphaSections[letter].map((contact, i) => {
                 const days = daysSinceContact(contact);
                 const urgency = urgencyLabel(contact);
+                const topics = contact.topics || [];
                 return (
                   <div key={contact.id} style={{
-                    display: "flex", alignItems: "center", gap: 12,
-                    padding: "8px 16px",
+                    display: "flex", alignItems: "center", gap: 12, padding: "8px 16px",
                     borderBottom: i < alphaSections[letter].length - 1 ? `1px solid ${ios.separator}` : "none",
                     cursor: "pointer",
-                  }} onClick={() => onOpenContact && onOpenContact(contact)}>
-                    <NativeAvatar contact={contact} size={40} delay={0} />
+                  }} onClick={() => openSheet(contact)}>
+                    {contact.isGroup
+                      ? <div style={{ width: 40, height: 40, borderRadius: "50%", background: ios.fill2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <Users size={18} color={ios.label2} />
+                        </div>
+                      : <NativeAvatar contact={contact} size={40} delay={0} />}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 16, color: ios.label }}>{contact.name}</div>
-                      {urgency && (
-                        <div style={{ fontSize: 12, color: urgency.color, marginTop: 1, fontWeight: "500" }}>
-                          {urgency.text} · {daysLabel(days)}
-                        </div>
-                      )}
+                      {urgency
+                        ? <div style={{ fontSize: 12, color: urgency.color, marginTop: 1, fontWeight: "500" }}>{urgency.text} · {daysLabel(days)}</div>
+                        : topics.length > 0
+                        ? <div style={{ display: "flex", gap: 4, marginTop: 3, overflow: "hidden" }}>
+                            {topics.slice(0, 3).map(t => (
+                              <div key={t} style={{ background: ios.fill2, borderRadius: 20, padding: "1px 8px", fontSize: 11, color: ios.label2, fontWeight: "500", whiteSpace: "nowrap" }}>{t}</div>
+                            ))}
+                          </div>
+                        : null}
                     </div>
-                    <Phone size={20} color={ios.blue} style={{ flexShrink: 0, opacity: 0.8 }} />
+                    {contact.isGroup
+                      ? <MessageCircle size={20} color={ios.blue} style={{ flexShrink: 0, opacity: 0.8 }} />
+                      : <Phone size={20} color={ios.blue} style={{ flexShrink: 0, opacity: 0.8 }} />}
                   </div>
                 );
               })}
@@ -1355,13 +1495,12 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
         )}
       </div>
 
+      {/* Alpha scrubber — functional */}
       {!searchQuery && (
-        <div style={{
-          position: "fixed", right: 4, top: "50%", transform: "translateY(-50%)",
-          display: "flex", flexDirection: "column", gap: 1, zIndex: 10,
-        }}>
+        <div style={{ position: "fixed", right: 4, top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: 1, zIndex: 10 }}>
           {letters.map(l => (
-            <div key={l} style={{ fontSize: 10, fontWeight: "600", color: ios.blue, lineHeight: 1.5, textAlign: "center", width: 16, cursor: "pointer" }}>
+            <div key={l} onClick={() => scrollToLetter(l)}
+              style={{ fontSize: 10, fontWeight: "600", color: ios.blue, lineHeight: 1.5, textAlign: "center", width: 16, cursor: "pointer" }}>
               {l}
             </div>
           ))}
@@ -1370,7 +1509,7 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
     </div>
   );
 
-  const overdueCount = individuals.filter(r => r.healthScore < 40).length;
+  const overdueCount = [...relationships].filter(r => r.healthScore < 40).length;
 
   return (
     <div style={{
@@ -1451,10 +1590,43 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
         {activeTab === "favorites" && <FavoritesTab />}
         {activeTab === "insights"  && <InsightsTab />}
         {activeTab === "recents" && (
-          <div style={{ padding: "40px 16px", textAlign: "center", color: ios.label2 }}>
-            <Clock size={40} color={ios.label3} style={{ margin: "0 auto 12px" }} />
-            <div style={{ fontSize: 17, fontWeight: "500" }}>Recents</div>
-            <div style={{ fontSize: 14, marginTop: 6 }}>Synced from your call history.</div>
+          <div style={{ paddingBottom: 100 }}>
+            {recents.length === 0 ? (
+              <div style={{ padding: "60px 20px", textAlign: "center", color: ios.label2 }}>
+                <Clock size={40} color={ios.label3} style={{ margin: "0 auto 12px" }} />
+                <div style={{ fontSize: 17, fontWeight: "500" }}>No recent activity</div>
+                <div style={{ fontSize: 14, marginTop: 6 }}>Sync from your Mac to populate.</div>
+              </div>
+            ) : (
+              <div style={{ background: ios.card }}>
+                {recents.map((item, i) => {
+                  const isCall = item.medium && !item.medium.toLowerCase().includes("imessage");
+                  return (
+                    <div key={i} style={{
+                      display: "flex", alignItems: "center", gap: 12,
+                      padding: "10px 16px",
+                      borderBottom: i < recents.length - 1 ? `1px solid ${ios.separator}` : "none",
+                      cursor: "pointer",
+                    }} onClick={() => openSheet(item.contact)}>
+                      <NativeAvatar contact={item.contact} size={44} delay={0} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 16, color: ios.label }}>{item.contact.name}</div>
+                        <div style={{ fontSize: 13, color: ios.label2, marginTop: 1, display: "flex", alignItems: "center", gap: 4 }}>
+                          {isCall ? <Phone size={12} color={ios.label3} /> : <MessageCircle size={12} color={ios.label3} />}
+                          {item.medium}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right", flexShrink: 0 }}>
+                        <div style={{ fontSize: 14, color: ios.label2 }}>{item.date}</div>
+                        {item.initiatedBy === "me" && (
+                          <div style={{ fontSize: 11, color: ios.label3, marginTop: 1 }}>You</div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -1497,6 +1669,9 @@ export function DesignE({ relationships, onOpenDetail, onOpenContact, dataSource
           );
         })}
       </div>
+
+      {/* Contact detail sheet */}
+      {selectedContact && <ContactSheet contact={selectedContact} onClose={closeSheet} />}
     </div>
   );
 }
