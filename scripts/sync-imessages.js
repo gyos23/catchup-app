@@ -13,7 +13,7 @@ const os = require("os");
 // ── Paths ─────────────────────────────────────────────────────────────────────
 const MESSAGES_DB = path.join(os.homedir(), "Library/Messages/chat.db");
 const CALL_HISTORY_DB = path.join(os.homedir(), "Library/Application Support/CallHistoryDB/CallHistory.storedata");
-const LOOKBACK_DAYS = 90;
+const LOOKBACK_DAYS = 365;
 const LOOKBACK_SEC = LOOKBACK_DAYS * 86400;
 
 // ZCALLTYPE codes
@@ -198,9 +198,9 @@ function fetchIndividualContacts(abDb) {
       AND h.id NOT LIKE '%smsfp%'
       AND h.id NOT LIKE '%@%'
     GROUP BY h.id
-    HAVING total_msgs > 5
+    HAVING total_msgs >= 1
     ORDER BY last_contact DESC
-    LIMIT 25
+    LIMIT 200
   `;
 
   const tmpFile = path.join(os.tmpdir(), `catchup_ind_${Date.now()}.sql`);
@@ -248,9 +248,9 @@ function fetchGroupChats(abDb) {
       AND m.item_type = 0
       AND (m.text IS NOT NULL OR m.cache_has_attachments=1)
     GROUP BY c.ROWID
-    HAVING total_msgs > 5
+    HAVING total_msgs >= 1
     ORDER BY last_contact DESC
-    LIMIT 10
+    LIMIT 50
   `;
 
   const tmpFile = path.join(os.tmpdir(), `catchup_grp_${Date.now()}.sql`);
@@ -569,7 +569,33 @@ async function main() {
   const callDbExists = fs.existsSync(CALL_HISTORY_DB);
   console.log(callDbExists ? "✅ CallHistoryDB found — tracking calls & FaceTime" : "⚠️  No CallHistoryDB — call data skipped");
 
+  // Deduplicate: same resolved name = same person texting from multiple numbers.
+  // Merge by keeping the row with the most recent lastContact; accumulate total_msgs.
+  const seen = new Map(); // name → row index in deduped array
+  const deduped = [];
   for (const row of individuals) {
+    const key = row.name?.toLowerCase().trim() || row.contact_id;
+    if (seen.has(key)) {
+      const idx = seen.get(key);
+      const existing = deduped[idx];
+      // Keep the more recent contact_id (for snippet/call lookups) and merge counts
+      if (row.days_since < existing.days_since) {
+        deduped[idx] = { ...row, total_msgs: existing.total_msgs + row.total_msgs,
+          from_me: existing.from_me + row.from_me,
+          from_them: existing.from_them + row.from_them };
+      } else {
+        deduped[idx].total_msgs += row.total_msgs;
+        deduped[idx].from_me   += row.from_me;
+        deduped[idx].from_them += row.from_them;
+      }
+    } else {
+      seen.set(key, deduped.length);
+      deduped.push({ ...row });
+    }
+  }
+  console.log(`  (${individuals.length - deduped.length} duplicates merged)`);
+
+  for (const row of deduped) {
     const snippets = fetchRecentSnippets(row.contact_id, false);
     const calls    = callDbExists ? fetchCallsForContact(row.contact_id) : [];
     const topics   = extractTopics(row.contact_id, false);
@@ -596,11 +622,28 @@ async function main() {
     relationships,
   };
 
+  // ── Write 1: local public/data (for web app / Vercel)
   const outPath = path.join(__dirname, "../public/data/relationships.json");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
+  console.log(`\n✅ ${relationships.length} contacts written to public/data/relationships.json`);
 
-  console.log(`\n✅ ${relationships.length} contacts written to public/data/relationships.json\n`);
+  // ── Write 2: iCloud Drive container (auto-syncs to iPhone)
+  const iCloudBase = path.join(
+    os.homedir(),
+    "Library/Mobile Documents/iCloud~com~dorianliriano~CatchUp/Documents"
+  );
+  try {
+    fs.mkdirSync(iCloudBase, { recursive: true });
+    const iCloudPath = path.join(iCloudBase, "relationships.json");
+    fs.writeFileSync(iCloudPath, JSON.stringify(out, null, 2));
+    console.log(`☁️  Also written to iCloud Drive → iPhone will update automatically`);
+    console.log(`   (${iCloudPath})`);
+  } catch (e) {
+    console.log(`⚠️  iCloud write skipped: ${e.message}`);
+    console.log(`   Run from your Mac to enable iCloud sync, or AirDrop relationships.json manually.`);
+  }
+  console.log();
 
   const emoji = { green: "🟢", yellow: "🟡", red: "🔴" };
   const tag = { true: "👥", false: "👤" };

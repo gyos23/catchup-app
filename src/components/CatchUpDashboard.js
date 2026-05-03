@@ -35,17 +35,19 @@ import {
 } from "lucide-react";
 
 const brandColors = {
-  primary: "#0969b8",
+  primary: "#007AFF",   // blue — focus / action
+  green:   "#34C759",   // healthy
+  orange:  "#FF9F0A",   // needs attention
+  red:     "#FF453A",   // overdue / priority
   secondary: "#6c6870",
   white: "#ffffff",
-  warning: "#e6961e",
+  warning: "#FF9F0A",
   background: "#f4f4f3",
   black: "#000000",
   darkBlue: "#0c2340",
-  blue: "#003087",
-  red: "#e4002c",
+  blue: "#007AFF",
   gray: "#c4ced3",
-  yellow: "#f2a900",
+  yellow: "#FF9F0A",    // alias → orange
 };
 
 // ─── Relationship Tags ────────────────────────────────────────────────────────
@@ -389,8 +391,8 @@ function generateGoalSuggestions(person) {
 
 const getStatusColor = (status) => {
   switch (status) {
-    case "green": return brandColors.primary;
-    case "yellow": return brandColors.yellow;
+    case "green": return brandColors.green;
+    case "yellow": return brandColors.orange;
     case "red": return brandColors.red;
     default: return brandColors.secondary;
   }
@@ -398,8 +400,8 @@ const getStatusColor = (status) => {
 
 const getStatusIcon = (status) => {
   switch (status) {
-    case "green": return <CheckCircle size={16} color={brandColors.primary} />;
-    case "yellow": return <AlertTriangle size={16} color={brandColors.yellow} />;
+    case "green": return <CheckCircle size={16} color={brandColors.green} />;
+    case "yellow": return <AlertTriangle size={16} color={brandColors.orange} />;
     case "red": return <AlertTriangle size={16} color={brandColors.red} />;
     default: return null;
   }
@@ -1509,12 +1511,9 @@ const CatchUpDashboard = () => {
         <div className="flex items-center space-x-1 rounded-full px-2 py-1.5 shadow-2xl"
              style={{ backgroundColor: "rgba(12,35,64,0.92)", backdropFilter: "blur(12px)" }}>
           {[
-            { key: "E",        label: "⬡ Native" },
-            { key: "D",        label: "✦ Focus" },
+            { key: "D",        label: "Focus" },
             { key: "original", label: "Classic" },
-            { key: "A",        label: "Coach" },
-            { key: "B",        label: "Orbit" },
-            { key: "C",        label: "Pulse" },
+            { key: "E",        label: "Native" },
           ].map(({ key, label }) => (
             <button
               key={key}
@@ -1635,8 +1634,8 @@ const CatchUpDashboard = () => {
         <div className="grid grid-cols-4 gap-3 mb-6">
           {[
             { key: "all", label: "Total", color: brandColors.white, textColor: brandColors.primary },
-            { key: "green", label: "Healthy", color: brandColors.primary, textColor: brandColors.white },
-            { key: "yellow", label: "Attention", color: brandColors.yellow, textColor: brandColors.white },
+            { key: "green", label: "Healthy", color: brandColors.green, textColor: brandColors.white },
+            { key: "yellow", label: "Attention", color: brandColors.orange, textColor: brandColors.white },
             { key: "red", label: "Priority", color: brandColors.red, textColor: brandColors.white },
           ].map((item) => (
             <button

@@ -13,11 +13,12 @@ import {
 } from "lucide-react";
 
 const brand = {
-  primary:   "#0969b8",
+  primary:   "#007AFF",  // blue — reserved for "Your move today" / focus
   dark:      "#0c2340",
-  yellow:    "#f2a900",
-  red:       "#e4002c",
-  green:     "#0969b8",
+  orange:    "#FF9F0A",  // attention / needs work
+  red:       "#FF453A",  // overdue / priority
+  green:     "#34C759",  // healthy / good
+  yellow:    "#FF9F0A",  // alias for orange (legacy refs)
   bg:        "#f4f4f3",
   white:     "#ffffff",
   secondary: "#6c6870",
@@ -25,14 +26,14 @@ const brand = {
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 function statusColor(status) {
-  return status === "green" ? brand.primary : status === "yellow" ? brand.yellow : brand.red;
+  return status === "green" ? brand.green : status === "yellow" ? brand.orange : brand.red;
 }
 
 function HealthRing({ score, size = 60, strokeWidth = 4 }) {
   const r = (size - strokeWidth * 2) / 2;
   const c = 2 * Math.PI * r;
   const dash = (score / 100) * c;
-  const color = score >= 70 ? brand.primary : score >= 40 ? brand.yellow : brand.red;
+  const color = score >= 70 ? brand.green : score >= 40 ? brand.orange : brand.red;
   return (
     <svg width={size} height={size} style={{ position: "absolute", top: 0, left: 0 }}>
       <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={strokeWidth} />
@@ -411,24 +412,23 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div
         style={{
-          backgroundColor: "#ffffff",
+          background: "linear-gradient(135deg, #007AFF 0%, #0055CC 100%)",
           paddingTop: "max(1.5rem, env(safe-area-inset-top))",
-          boxShadow: "0 1px 0 rgba(0,0,0,0.07)",
         }}
-        className="px-5 pb-4"
+        className="px-5 pb-5"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Heart size={18} style={{ color: "#0969b8" }} />
+            <Heart size={20} style={{ color: "rgba(255,255,255,0.9)" }} />
             <span
-              className="font-bold text-lg"
-              style={{ color: "#0c2340", letterSpacing: "-0.02em" }}
+              className="font-bold text-xl"
+              style={{ color: "#ffffff", letterSpacing: "-0.02em" }}
             >
               CatchUp
             </span>
           </div>
 
-          {/* Tribe health ring + number — fix 3: 40px / 3.5px stroke */}
+          {/* Tribe health ring + number */}
           <div className="flex items-center space-x-2">
             <div style={{ width: 40, height: 40 }}>
               <AnimatedRing score={avgHealth} size={40} strokeWidth={3.5} delay={700} />
@@ -436,14 +436,11 @@ export function DesignD({ relationships, onOpenDetail, onOpenContact, dataSource
             <div className="text-right leading-none">
               <p
                 className="font-black text-base"
-                style={{
-                  color: avgHealth >= 70 ? "#0969b8" : avgHealth >= 40 ? "#f2a900" : "#e4002c",
-                  letterSpacing: "-0.02em",
-                }}
+                style={{ color: "#ffffff", letterSpacing: "-0.02em" }}
               >
                 {avgHealth}%
               </p>
-              <p className="mt-0.5" style={{ color: "#9ca3af", fontSize: "10px" }}>tribe health</p>
+              <p className="mt-0.5" style={{ color: "rgba(255,255,255,0.65)", fontSize: "10px" }}>tribe health</p>
             </div>
           </div>
         </div>

@@ -1,0 +1,1006 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		66E2B9FA2FA3988500F926B6 /* CatchUp Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 66E2B9D32FA3988300F926B6 /* CatchUp Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		66760B892F9D5BB400D37787 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66760B6E2F9D5BB100D37787 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66760B752F9D5BB100D37787;
+			remoteInfo = CatchUp;
+		};
+		66760B932F9D5BB400D37787 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66760B6E2F9D5BB100D37787 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66760B752F9D5BB100D37787;
+			remoteInfo = CatchUp;
+		};
+		66E2B9E72FA3988500F926B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66760B6E2F9D5BB100D37787 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66E2B9D22FA3988300F926B6;
+			remoteInfo = "CatchUp Clip";
+		};
+		66E2B9F12FA3988500F926B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66760B6E2F9D5BB100D37787 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66E2B9D22FA3988300F926B6;
+			remoteInfo = "CatchUp Clip";
+		};
+		66E2B9F82FA3988500F926B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66760B6E2F9D5BB100D37787 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66E2B9D22FA3988300F926B6;
+			remoteInfo = "CatchUp Clip";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		66E2B9FF2FA3988500F926B6 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				66E2B9FA2FA3988500F926B6 /* CatchUp Clip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		66760B762F9D5BB100D37787 /* CatchUp Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CatchUp Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66760B882F9D5BB400D37787 /* CatchUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatchUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		66760B922F9D5BB400D37787 /* CatchUpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatchUpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E2B9D32FA3988300F926B6 /* CatchUp Clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CatchUp Clip.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E2B9E62FA3988500F926B6 /* CatchUp ClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CatchUp ClipTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E2B9F02FA3988500F926B6 /* CatchUp ClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CatchUp ClipUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		66E2B9FB2FA3988500F926B6 /* Exceptions for "CatchUp Clip" folder in "CatchUp Clip" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 66E2B9D22FA3988300F926B6 /* CatchUp Clip */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		66760B782F9D5BB100D37787 /* CatchUp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CatchUp;
+			sourceTree = "<group>";
+		};
+		66760B8B2F9D5BB400D37787 /* CatchUpTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CatchUpTests;
+			sourceTree = "<group>";
+		};
+		66760B952F9D5BB400D37787 /* CatchUpUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CatchUpUITests;
+			sourceTree = "<group>";
+		};
+		66E2B9D42FA3988300F926B6 /* CatchUp Clip */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				66E2B9FB2FA3988500F926B6 /* Exceptions for "CatchUp Clip" folder in "CatchUp Clip" target */,
+			);
+			path = "CatchUp Clip";
+			sourceTree = "<group>";
+		};
+		66E2B9E92FA3988500F926B6 /* CatchUp ClipTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "CatchUp ClipTests";
+			sourceTree = "<group>";
+		};
+		66E2B9F32FA3988500F926B6 /* CatchUp ClipUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "CatchUp ClipUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		66760B732F9D5BB100D37787 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66760B852F9D5BB400D37787 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66760B8F2F9D5BB400D37787 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9D02FA3988300F926B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9E32FA3988500F926B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9ED2FA3988500F926B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		66760B6D2F9D5BB100D37787 = {
+			isa = PBXGroup;
+			children = (
+				66760B782F9D5BB100D37787 /* CatchUp */,
+				66760B8B2F9D5BB400D37787 /* CatchUpTests */,
+				66760B952F9D5BB400D37787 /* CatchUpUITests */,
+				66E2B9D42FA3988300F926B6 /* CatchUp Clip */,
+				66E2B9E92FA3988500F926B6 /* CatchUp ClipTests */,
+				66E2B9F32FA3988500F926B6 /* CatchUp ClipUITests */,
+				66760B772F9D5BB100D37787 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		66760B772F9D5BB100D37787 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				66760B762F9D5BB100D37787 /* CatchUp Test.app */,
+				66760B882F9D5BB400D37787 /* CatchUpTests.xctest */,
+				66760B922F9D5BB400D37787 /* CatchUpUITests.xctest */,
+				66E2B9D32FA3988300F926B6 /* CatchUp Clip.app */,
+				66E2B9E62FA3988500F926B6 /* CatchUp ClipTests.xctest */,
+				66E2B9F02FA3988500F926B6 /* CatchUp ClipUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		66760B752F9D5BB100D37787 /* CatchUp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66760B9C2F9D5BB400D37787 /* Build configuration list for PBXNativeTarget "CatchUp" */;
+			buildPhases = (
+				66760B722F9D5BB100D37787 /* Sources */,
+				66760B732F9D5BB100D37787 /* Frameworks */,
+				66760B742F9D5BB100D37787 /* Resources */,
+				66E2B9FF2FA3988500F926B6 /* Embed App Clips */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66E2B9F92FA3988500F926B6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				66760B782F9D5BB100D37787 /* CatchUp */,
+			);
+			name = CatchUp;
+			packageProductDependencies = (
+			);
+			productName = CatchUp;
+			productReference = 66760B762F9D5BB100D37787 /* CatchUp Test.app */;
+			productType = "com.apple.product-type.application";
+		};
+		66760B872F9D5BB400D37787 /* CatchUpTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66760B9F2F9D5BB400D37787 /* Build configuration list for PBXNativeTarget "CatchUpTests" */;
+			buildPhases = (
+				66760B842F9D5BB400D37787 /* Sources */,
+				66760B852F9D5BB400D37787 /* Frameworks */,
+				66760B862F9D5BB400D37787 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66760B8A2F9D5BB400D37787 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				66760B8B2F9D5BB400D37787 /* CatchUpTests */,
+			);
+			name = CatchUpTests;
+			packageProductDependencies = (
+			);
+			productName = CatchUpTests;
+			productReference = 66760B882F9D5BB400D37787 /* CatchUpTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		66760B912F9D5BB400D37787 /* CatchUpUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66760BA22F9D5BB400D37787 /* Build configuration list for PBXNativeTarget "CatchUpUITests" */;
+			buildPhases = (
+				66760B8E2F9D5BB400D37787 /* Sources */,
+				66760B8F2F9D5BB400D37787 /* Frameworks */,
+				66760B902F9D5BB400D37787 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66760B942F9D5BB400D37787 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				66760B952F9D5BB400D37787 /* CatchUpUITests */,
+			);
+			name = CatchUpUITests;
+			packageProductDependencies = (
+			);
+			productName = CatchUpUITests;
+			productReference = 66760B922F9D5BB400D37787 /* CatchUpUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		66E2B9D22FA3988300F926B6 /* CatchUp Clip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66E2B9FC2FA3988500F926B6 /* Build configuration list for PBXNativeTarget "CatchUp Clip" */;
+			buildPhases = (
+				66E2B9CF2FA3988300F926B6 /* Sources */,
+				66E2B9D02FA3988300F926B6 /* Frameworks */,
+				66E2B9D12FA3988300F926B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				66E2B9D42FA3988300F926B6 /* CatchUp Clip */,
+			);
+			name = "CatchUp Clip";
+			packageProductDependencies = (
+			);
+			productName = "CatchUp Clip";
+			productReference = 66E2B9D32FA3988300F926B6 /* CatchUp Clip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
+		66E2B9E52FA3988500F926B6 /* CatchUp ClipTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66E2BA002FA3988500F926B6 /* Build configuration list for PBXNativeTarget "CatchUp ClipTests" */;
+			buildPhases = (
+				66E2B9E22FA3988500F926B6 /* Sources */,
+				66E2B9E32FA3988500F926B6 /* Frameworks */,
+				66E2B9E42FA3988500F926B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66E2B9E82FA3988500F926B6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				66E2B9E92FA3988500F926B6 /* CatchUp ClipTests */,
+			);
+			name = "CatchUp ClipTests";
+			packageProductDependencies = (
+			);
+			productName = "CatchUp ClipTests";
+			productReference = 66E2B9E62FA3988500F926B6 /* CatchUp ClipTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		66E2B9EF2FA3988500F926B6 /* CatchUp ClipUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66E2BA032FA3988500F926B6 /* Build configuration list for PBXNativeTarget "CatchUp ClipUITests" */;
+			buildPhases = (
+				66E2B9EC2FA3988500F926B6 /* Sources */,
+				66E2B9ED2FA3988500F926B6 /* Frameworks */,
+				66E2B9EE2FA3988500F926B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66E2B9F22FA3988500F926B6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				66E2B9F32FA3988500F926B6 /* CatchUp ClipUITests */,
+			);
+			name = "CatchUp ClipUITests";
+			packageProductDependencies = (
+			);
+			productName = "CatchUp ClipUITests";
+			productReference = 66E2B9F02FA3988500F926B6 /* CatchUp ClipUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		66760B6E2F9D5BB100D37787 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					66760B752F9D5BB100D37787 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					66760B872F9D5BB400D37787 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 66760B752F9D5BB100D37787;
+					};
+					66760B912F9D5BB400D37787 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 66760B752F9D5BB100D37787;
+					};
+					66E2B9D22FA3988300F926B6 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					66E2B9E52FA3988500F926B6 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 66E2B9D22FA3988300F926B6;
+					};
+					66E2B9EF2FA3988500F926B6 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 66E2B9D22FA3988300F926B6;
+					};
+				};
+			};
+			buildConfigurationList = 66760B712F9D5BB100D37787 /* Build configuration list for PBXProject "CatchUp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 66760B6D2F9D5BB100D37787;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 66760B772F9D5BB100D37787 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				66760B752F9D5BB100D37787 /* CatchUp */,
+				66760B872F9D5BB400D37787 /* CatchUpTests */,
+				66760B912F9D5BB400D37787 /* CatchUpUITests */,
+				66E2B9D22FA3988300F926B6 /* CatchUp Clip */,
+				66E2B9E52FA3988500F926B6 /* CatchUp ClipTests */,
+				66E2B9EF2FA3988500F926B6 /* CatchUp ClipUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		66760B742F9D5BB100D37787 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66760B862F9D5BB400D37787 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66760B902F9D5BB400D37787 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9D12FA3988300F926B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9E42FA3988500F926B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9EE2FA3988500F926B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		66760B722F9D5BB100D37787 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66760B842F9D5BB400D37787 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66760B8E2F9D5BB400D37787 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9CF2FA3988300F926B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9E22FA3988500F926B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66E2B9EC2FA3988500F926B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		66760B8A2F9D5BB400D37787 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66760B752F9D5BB100D37787 /* CatchUp */;
+			targetProxy = 66760B892F9D5BB400D37787 /* PBXContainerItemProxy */;
+		};
+		66760B942F9D5BB400D37787 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66760B752F9D5BB100D37787 /* CatchUp */;
+			targetProxy = 66760B932F9D5BB400D37787 /* PBXContainerItemProxy */;
+		};
+		66E2B9E82FA3988500F926B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66E2B9D22FA3988300F926B6 /* CatchUp Clip */;
+			targetProxy = 66E2B9E72FA3988500F926B6 /* PBXContainerItemProxy */;
+		};
+		66E2B9F22FA3988500F926B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66E2B9D22FA3988300F926B6 /* CatchUp Clip */;
+			targetProxy = 66E2B9F12FA3988500F926B6 /* PBXContainerItemProxy */;
+		};
+		66E2B9F92FA3988500F926B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66E2B9D22FA3988300F926B6 /* CatchUp Clip */;
+			targetProxy = 66E2B9F82FA3988500F926B6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		66760B9A2F9D5BB400D37787 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		66760B9B2F9D5BB400D37787 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		66760B9D2F9D5BB400D37787 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CatchUp/CatchUp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSContactsUsageDescription = "CatchUp uses your contacts to track your most important relationships.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUp;
+				PRODUCT_NAME = "CatchUp Test";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		66760B9E2F9D5BB400D37787 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CatchUp/CatchUp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSContactsUsageDescription = "CatchUp uses your contacts to track your most important relationships.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUp;
+				PRODUCT_NAME = "CatchUp Test";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		66760BA02F9D5BB400D37787 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUpTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CatchUp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CatchUp";
+			};
+			name = Debug;
+		};
+		66760BA12F9D5BB400D37787 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUpTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CatchUp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CatchUp";
+			};
+			name = Release;
+		};
+		66760BA32F9D5BB400D37787 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUpUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CatchUp;
+			};
+			name = Debug;
+		};
+		66760BA42F9D5BB400D37787 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUpUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CatchUp;
+			};
+			name = Release;
+		};
+		66E2B9FD2FA3988500F926B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CatchUp Clip/CatchUp_Clip.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CatchUp Clip/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "CatchUp Test";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUp.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		66E2B9FE2FA3988500F926B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CatchUp Clip/CatchUp_Clip.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CatchUp Clip/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "CatchUp Test";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dorianliriano.CatchUp.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		66E2BA012FA3988500F926B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dorianliriano.CatchUp.CatchUp-ClipTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CatchUp Clip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CatchUp Clip";
+			};
+			name = Debug;
+		};
+		66E2BA022FA3988500F926B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dorianliriano.CatchUp.CatchUp-ClipTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CatchUp Clip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CatchUp Clip";
+			};
+			name = Release;
+		};
+		66E2BA042FA3988500F926B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dorianliriano.CatchUp.CatchUp-ClipUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "CatchUp Clip";
+			};
+			name = Debug;
+		};
+		66E2BA052FA3988500F926B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS5P47FNSR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dorianliriano.CatchUp.CatchUp-ClipUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "CatchUp Clip";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		66760B712F9D5BB100D37787 /* Build configuration list for PBXProject "CatchUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66760B9A2F9D5BB400D37787 /* Debug */,
+				66760B9B2F9D5BB400D37787 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66760B9C2F9D5BB400D37787 /* Build configuration list for PBXNativeTarget "CatchUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66760B9D2F9D5BB400D37787 /* Debug */,
+				66760B9E2F9D5BB400D37787 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66760B9F2F9D5BB400D37787 /* Build configuration list for PBXNativeTarget "CatchUpTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66760BA02F9D5BB400D37787 /* Debug */,
+				66760BA12F9D5BB400D37787 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66760BA22F9D5BB400D37787 /* Build configuration list for PBXNativeTarget "CatchUpUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66760BA32F9D5BB400D37787 /* Debug */,
+				66760BA42F9D5BB400D37787 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66E2B9FC2FA3988500F926B6 /* Build configuration list for PBXNativeTarget "CatchUp Clip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66E2B9FD2FA3988500F926B6 /* Debug */,
+				66E2B9FE2FA3988500F926B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66E2BA002FA3988500F926B6 /* Build configuration list for PBXNativeTarget "CatchUp ClipTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66E2BA012FA3988500F926B6 /* Debug */,
+				66E2BA022FA3988500F926B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66E2BA032FA3988500F926B6 /* Build configuration list for PBXNativeTarget "CatchUp ClipUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66E2BA042FA3988500F926B6 /* Debug */,
+				66E2BA052FA3988500F926B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 66760B6E2F9D5BB100D37787 /* Project object */;
+}
